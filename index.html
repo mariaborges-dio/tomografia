@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#151617;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;}
+a{color:#7fb3f5;text-decoration:none;}
+a:hover{color:#a9cbf8;}
+*{box-sizing:border-box;}
+</style>
+</helmet>
+
+<div style="width:100vw;height:100vh;min-width:1280px;min-height:760px;background:#151617;color:#ebecee;display:flex;flex-direction:column;overflow:hidden;font-family:'IBM Plex Sans',Helvetica,Arial,sans-serif;">
+
+<sc-if value="{{ isDio }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="DIO header" style="height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:#1c1e20;border-bottom:1px solid #2a2e32;">
+    <div onClick="{{ goHome }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:1px;cursor:pointer;">
+      <span style="font-size:26px;font-weight:600;letter-spacing:0.12em;line-height:1;">DIO</span>
+      <span style="width:52px;height:6px;border-bottom:2px solid #3d8ff0;border-radius:0 0 40px 40px;margin-left:6px;"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <sc-for list="{{ dioNav }}" as="n" hint-placeholder-count="7">
+          <div title="{{ n.title }}" onClick="{{ n.onClick }}" style="width:44px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ n.bg }};color:#d5d9dd;">{{ n.icon }}</div>
+        </sc-for>
+      </div>
+      <span style="width:1px;height:28px;background:#33373b;"></span>
+      <div style="display:flex;align-items:center;gap:12px;font-size:15px;color:#c6cacf;">Maria Clara Borges<span style="width:36px;height:36px;border-radius:50%;background:#2c3034;display:flex;align-items:center;justify-content:center;color:#ebecee;">{{ ic.pessoa }}</span></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Home" style="flex:1;overflow:auto;background:#1f2123;padding:36px 56px 48px;">
+    <div style="display:flex;align-items:center;gap:14px;font-size:24px;padding-bottom:24px;border-bottom:1px solid #2e3236;"><span style="color:#c6cacf;display:flex;">{{ ic.pessoa }}</span>Seja bem-vindo(a) novamente, Maria Clara Borges!</div>
+    <div style="font-size:22px;font-weight:600;margin:32px 0 20px;">Estatísticas Gerais</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div style="background:#26292c;border:1px solid #33373b;border-radius:10px;padding:28px 32px;display:flex;flex-direction:column;gap:28px;min-height:220px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;"><span style="color:#c6cacf;display:flex;transform:scale(1.5);transform-origin:left top;">{{ ic.ficha }}</span>
+          <div onClick="{{ goWizard }}" style="display:flex;align-items:center;gap:10px;padding:12px 22px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;">Analisar nova imagem<span style="display:flex;">{{ ic.mais }}</span></div>
+        </div>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;"><span style="font-size:44px;font-weight:500;line-height:1.1;">0 de 50</span><span style="font-size:17px;color:#b4bac2;">Pacientes analisados neste mês</span></div>
+      </div>
+      <div style="background:#26292c;border:1px solid #33373b;border-radius:10px;padding:28px 32px;display:flex;flex-direction:column;gap:28px;min-height:220px;">
+        <span style="color:#c6cacf;display:flex;transform:scale(1.5);transform-origin:left top;">{{ ic.analise }}</span>
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;"><span style="font-size:44px;font-weight:500;line-height:1.1;">71</span><span style="font-size:17px;color:#b4bac2;">Total de exames analisados</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px;">
+      <div style="background:#26292c;border:1px solid #33373b;border-radius:10px;padding:28px 32px;display:flex;flex-direction:column;gap:28px;min-height:200px;"><span style="color:#c6cacf;display:flex;transform:scale(1.5);transform-origin:left top;">{{ ic.panoramica }}</span><div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;"><span style="font-size:40px;font-weight:500;line-height:1.1;">24</span><span style="font-size:16px;color:#b4bac2;">Radiografia(s) Panorâmica(s) analisada(s)</span></div></div>
+      <div style="background:#26292c;border:1px solid #33373b;border-radius:10px;padding:28px 32px;display:flex;flex-direction:column;gap:28px;min-height:200px;"><span style="color:#c6cacf;display:flex;transform:scale(1.5);transform-origin:left top;">{{ ic.dente }}</span><div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;"><span style="font-size:40px;font-weight:500;line-height:1.1;">43</span><span style="font-size:16px;color:#b4bac2;">Radiografia(s) Periapical(is) analisada(s)</span></div></div>
+      <div style="background:#26292c;border:1px solid #33373b;border-radius:10px;padding:28px 32px;display:flex;flex-direction:column;gap:28px;min-height:200px;"><span style="color:#c6cacf;display:flex;transform:scale(1.5);transform-origin:left top;">{{ ic.tabela }}</span><div style="margin-top:auto;display:flex;flex-direction:column;gap:6px;"><span style="font-size:40px;font-weight:500;line-height:1.1;">4</span><span style="font-size:16px;color:#b4bac2;">Radiografia(s) Interproximal(is) analisada(s)</span></div></div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isWizard }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Analisar nova imagem" ref="{{ wizRef }}" style="flex:1;overflow:auto;background:#1f2123;padding:32px 56px 80px;">
+    <div style="display:flex;align-items:flex-start;gap:16px;padding-bottom:24px;border-bottom:1px solid #2e3236;">
+      <span style="color:#3d8ff0;display:flex;transform:scale(1.6);margin:8px 6px 0 4px;">{{ ic.engrenagem }}</span>
+      <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:28px;font-weight:500;">Adicionar Analis-AI</span><span style="font-size:16px;color:#b4bac2;">Envie exames do paciente para análise assistida pela IA.</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:56px minmax(0,1fr);column-gap:24px;margin-top:28px;">
+      <div style="display:flex;flex-direction:column;align-items:center;"><div style="{{ c1.style }}">{{ c1.content }}</div><span style="flex:1;width:2px;background:#33373b;margin:8px 0;"></span></div>
+      <div style="{{ c1.card }}">
+        <div style="font-size:22px;font-weight:500;">Selecionar paciente</div>
+        <div style="font-size:15px;color:#b4bac2;margin-top:6px;">Selecione o paciente para continuar com a análise.</div>
+        <sc-if value="{{ noPatient }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:16px;margin-top:20px;">
+            <div onClick="{{ pickPatient }}" style="flex:1;display:flex;align-items:center;gap:12px;height:52px;padding:0 18px;border:1px solid #3d8ff0;border-radius:8px;background:#26292c;color:#8c939a;font-size:15px;cursor:text;"><span style="display:flex;">{{ ic.zoom }}</span>Digite nome, CPF, telefone ou ID do paciente...</div>
+            <div style="display:flex;align-items:center;gap:10px;padding:0 22px;height:52px;background:#3a536f;color:#dbe7f5;border-radius:8px;font-size:15px;font-weight:500;"><span style="display:flex;">{{ ic.pessoa }}</span>Cadastrar novo paciente</div>
+          </div>
+          <div onClick="{{ pickPatient }}" style="margin-top:8px;display:flex;align-items:center;gap:14px;padding:12px 18px;background:#2a2d30;border-radius:8px;cursor:pointer;" style-hover="background:#30343a;">
+            <span style="width:36px;height:36px;border-radius:50%;background:#3a3f44;display:flex;align-items:center;justify-content:center;">{{ ic.pessoa }}</span>
+            <div style="display:flex;flex-direction:column;gap:2px;"><span style="font-size:15px;">Ana Souza</span><span style="font-size:13px;color:#8c939a;">CPF 123.456.789-00 · Prontuário 4821</span></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ patient }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;display:flex;align-items:center;gap:14px;padding:14px 20px;background:#2a2d30;border-radius:8px;">
+            <span style="width:40px;height:40px;border-radius:50%;background:#e4e6e8;color:#2a2d30;display:flex;align-items:center;justify-content:center;">{{ ic.pessoa }}</span>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px;"><span style="font-size:16px;">Ana Souza</span><span style="font-size:13px;color:#b4bac2;">CPF 123.456.789-00 · Prontuário 4821</span></div>
+            <div onClick="{{ swapPatient }}" style="padding:8px 18px;background:#3a3f44;border-radius:6px;font-size:14px;cursor:pointer;">Trocar</div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;margin-top:24px;"><div style="{{ c2.style }}">{{ c2.content }}</div><span style="flex:1;width:2px;background:#33373b;margin:8px 0;"></span></div>
+      <div style="{{ c2.card }}margin-top:24px;">
+        <div style="font-size:22px;font-weight:500;">Tipo de exame</div>
+        <div style="font-size:15px;color:#b4bac2;margin-top:6px;">{{ s2sub }}</div>
+        <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:20px;">
+          <sc-for list="{{ examTypes }}" as="t" hint-placeholder-count="5">
+            <div onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="width:44px;height:44px;flex-shrink:0;border-radius:8px;background:#1f2123;display:flex;align-items:center;justify-content:center;">{{ t.icon }}</span><span style="font-size:16px;font-weight:500;line-height:1.2;">{{ t.label }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;margin-top:24px;"><div style="{{ c3.style }}">{{ c3.content }}</div><sc-if value="{{ cbct }}" hint-placeholder-val="{{ false }}"><span style="flex:1;width:2px;background:#33373b;margin:8px 0;"></span></sc-if></div>
+      <div style="{{ c3.card }}margin-top:24px;">
+        <div style="font-size:22px;font-weight:500;">{{ s3title }}</div>
+        <div style="font-size:15px;color:#b4bac2;margin-top:6px;">{{ s3sub }}</div>
+        <sc-if value="{{ uploadLocked }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:20px;height:120px;border:1px dashed #3a3f44;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:10px;color:#8c939a;font-size:15px;"><span style="display:flex;">{{ ic.cadeado }}</span>Será habilitado após selecionar o tipo de exame.</div>
+        </sc-if>
+        <sc-if value="{{ uploadOpen }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ doUpload }}" style="margin-top:20px;height:170px;border:1px dashed #3d8ff0;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;background:#22252a;" style-hover="background:#262b31;">
+            <span style="color:#3d8ff0;display:flex;transform:scale(1.5);">{{ ic.upload }}</span>
+            <span style="font-size:16px;">Arraste o arquivo DICOM ou a pasta do exame</span>
+            <span style="padding:8px 18px;border:1px solid #3d8ff0;color:#7fb3f5;border-radius:6px;font-size:14px;">Selecionar arquivo</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ file }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;display:flex;align-items:center;gap:16px;padding:16px 20px;background:#2a2d30;border-radius:8px;">
+            <span style="color:#3d8ff0;display:flex;transform:scale(1.3);">{{ ic.arquivo }}</span>
+            <span style="flex:1;font-size:16px;">ana_souza_cbct.dcm</span>
+            <span style="display:flex;align-items:center;gap:8px;color:#56c07a;font-size:15px;">{{ ic.check }}Arquivo recebido</span>
+            <div onClick="{{ removeFile }}" style="padding:8px 18px;background:#3a3f44;border-radius:6px;font-size:14px;cursor:pointer;">Remover</div>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ cbct }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:24px;"><div style="{{ c4.style }}">{{ c4.content }}</div><span style="flex:1;width:2px;background:#33373b;margin:8px 0;"></span></div>
+        <div style="{{ c4.card }}margin-top:24px;">
+          <div style="font-size:22px;font-weight:500;">Revisar alinhamento</div>
+          <sc-if value="{{ alignLocked }}" hint-placeholder-val="{{ true }}"><div style="font-size:15px;color:#b4bac2;margin-top:6px;">Disponível após o upload.</div></sc-if>
+          <sc-if value="{{ alignVisible }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ alignReview }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px;">
+                <div style="display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;"><span style="width:22px;height:22px;border-radius:50%;background:#3d8ff0;color:#fff;display:flex;align-items:center;justify-content:center;transform:scale(0.9);">{{ ic.check }}</span>{{ alignTitle }}</div>
+                <div onClick="{{ openAdjust }}" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid #4a5056;border-radius:8px;font-size:14px;cursor:pointer;" style-hover="background:#2c3034;"><span style="display:flex;">{{ ic.ajustes }}</span>Ajustar</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:16px;font-weight:500;color:#7fb3f5;"><span style="display:flex;">{{ ic.ajustes }}</span>Ajuste da orientação</div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;">
+              <sc-for list="{{ alignViews }}" as="v" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="position:relative;aspect-ratio:480/393;background:#000;border-radius:6px;overflow:hidden;">
+                    <img src="{{ v.src }}" alt="{{ v.label }}" style="width:100%;height:100%;display:block;object-fit:cover;transform:{{ v.rot }};transition:transform 0.3s;">
+                    <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(61,143,240,0.8);"></span><span style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(61,143,240,0.8);"></span></sc-if>
+                  </div>
+                  <span style="font-size:14px;color:#b4bac2;">{{ v.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:16px;padding:20px 24px;background:#1c1e20;border-radius:8px;display:flex;flex-direction:column;gap:18px;">
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;">
+                  <sc-for list="{{ alignSliders }}" as="s" hint-placeholder-count="3">
+                    <div style="display:flex;flex-direction:column;gap:12px;">
+                      <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:#c6cacf;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div>
+                      <div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <div onClick="{{ resetAdjust }}" style="display:flex;align-items:center;gap:8px;color:#7fb3f5;font-size:14px;cursor:pointer;"><span style="display:flex;">{{ ic.reset }}</span>Redefinir para o alinhamento sugerido</div>
+                  <div style="display:flex;gap:10px;">
+                    <div onClick="{{ cancelAdjust }}" style="padding:10px 20px;background:#3a3f44;border-radius:8px;font-size:14px;cursor:pointer;">Cancelar</div>
+                    <div onClick="{{ applyAdjust }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.check }}Aplicar ajuste</div>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ alignReview }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px;">
+                <div onClick="{{ backUpload }}" style="display:flex;align-items:center;gap:8px;padding:12px 24px;background:#3a3f44;border-radius:8px;font-size:15px;cursor:pointer;">{{ ic.esq }}Voltar</div>
+                <div onClick="{{ confirmAlign }}" style="display:flex;align-items:center;gap:10px;padding:12px 26px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Confirmar alinhamento e processar{{ ic.check }}</div>
+              </div>
+            </sc-if>
+          </sc-if>
+        </div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;margin-top:24px;"><div style="{{ c5.style }}">{{ c5.content }}</div></div>
+        <div style="{{ c5.card }}margin-top:24px;">
+          <div style="font-size:22px;font-weight:500;">Processamento</div>
+          <sc-if value="{{ procIdle }}" hint-placeholder-val="{{ true }}"><div style="font-size:15px;color:#b4bac2;margin-top:6px;">Inicia após confirmar o alinhamento.</div></sc-if>
+          <sc-if value="{{ procShown }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:16px;margin-top:20px;">
+              <div style="flex:1;height:6px;border-radius:3px;background:#33373b;overflow:hidden;"><div style="height:6px;width:{{ progress }}%;background:#3d8ff0;transition:width 0.1s linear;"></div></div>
+              <span style="font-size:14px;color:#c6cacf;font-variant-numeric:tabular-nums;width:44px;text-align:right;">{{ progress }}%</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px;">
+              <sc-for list="{{ procItems }}" as="p" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:{{ p.color }};"><span style="display:flex;">{{ p.icon }}</span>{{ p.label }}</div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ procDone }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;justify-content:flex-end;margin-top:20px;"><div onClick="{{ openExam }}" style="padding:12px 28px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Abrir análise</div></div>
+            </sc-if>
+          </sc-if>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isExam }}" hint-placeholder-val="{{ false }}">
+  <div style="height:64px;flex-shrink:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 20px;background:#1a1c1e;border-bottom:1px solid #26292c;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div title="Voltar" onClick="{{ goHome }}" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.esq }}</div>
+      <div style="display:flex;flex-direction:column;gap:1px;"><span style="font-size:17px;font-weight:500;">Ana Souza</span><span style="font-size:13px;color:#8c939a;">Tomografia · 28/10/2026</span></div>
+    </div>
+    <div style="display:flex;gap:2px;padding:3px;background:#232629;border-radius:9px;">
+      <div onClick="{{ setTopA }}" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:7px;font-size:15px;cursor:pointer;{{ topAStyle }}"><span style="display:flex;">{{ ic.analise }}</span>Análise</div>
+      <div onClick="{{ setTopE }}" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:7px;font-size:15px;cursor:pointer;{{ topEStyle }}"><span style="display:flex;">{{ ic.camadas }}</span>Explorar exame</div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;">
+      <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:#8c939a;">{{ ic.check }}Salvo</span>
+      <div title="Mais opções" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c6cacf;">{{ ic.maisH }}</div>
+      <div onClick="{{ openPresent }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;"><span style="display:flex;">{{ ic.apresentar }}</span>Apresentar ao paciente</div>
+    </div>
+  </div>
+
+  <sc-if value="{{ anaResumo }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Análise" style="flex:1;display:flex;gap:16px;padding:16px;min-height:0;">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px;">
+        <div style="flex:1;min-height:0;position:relative;background:#000;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+          <sc-if value="{{ anaPano }}" hint-placeholder-val="{{ true }}">
+            <div style="position:relative;height:100%;max-width:100%;aspect-ratio:500/282;">
+              <img src="assets/clean/pano.png" alt="Panorâmica reconstruída" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
+              <div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;border:1.5px dashed rgba(127,179,245,0.9);background:rgba(61,143,240,0.10);border-radius:3px;"></div>
+              <sc-for list="{{ panoLines }}" as="l" hint-placeholder-count="12"><span style="position:absolute;left:{{ l.left }}%;top:{{ band.top }}%;height:{{ band.h }}%;width:{{ l.w }}px;background:{{ l.bg }};"></span></sc-for>
+              <span style="position:absolute;left:{{ band.left }}%;top:{{ band.labelTop }}%;margin:6px;padding:2px 8px;background:#3d8ff0;color:#fff;font-size:13px;font-weight:500;border-radius:3px;">{{ tooth }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ ana3d }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:#0b1526;"><img src="assets/3d/05_modelo_base.jpg" alt="3D" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          </sc-if>
+          <div style="position:absolute;left:12px;top:12px;display:flex;gap:2px;padding:3px;background:rgba(26,28,30,0.92);border-radius:8px;font-size:13px;">
+            <div onClick="{{ setAnaPano }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;cursor:pointer;{{ anaPanoStyle }}">{{ ic.panoramica }}Panorâmica</div>
+            <div onClick="{{ setAna3d }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;cursor:pointer;{{ ana3dStyle }}">{{ ic.cubo }}3D</div>
+          </div>
+          <div style="position:absolute;left:12px;bottom:12px;display:flex;gap:2px;padding:3px;background:rgba(26,28,30,0.92);border-radius:8px;">
+            <sc-for list="{{ tbAnalise }}" as="t" hint-placeholder-count="5">
+              <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:18px;background:#3a3f44;margin:8px 4px;"></span></sc-if>
+              <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};">{{ t.icon }}</div></sc-if>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;">
+          <div style="display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;">
+            <sc-for list="{{ teethUp }}" as="d" hint-placeholder-count="16"><div onClick="{{ d.onClick }}" style="position:relative;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer;{{ d.style }}">{{ d.n }}</div></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;">
+            <sc-for list="{{ teethLo }}" as="d" hint-placeholder-count="16"><div onClick="{{ d.onClick }}" style="position:relative;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer;{{ d.style }}">{{ d.n }}</div></sc-for>
+          </div>
+          <span style="font-size:12px;color:#7d848b;">Dentes · FDI</span>
+        </div>
+      </div>
+      <div style="width:380px;flex-shrink:0;background:#1c1e20;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:24px;overflow:auto;">
+        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:13px;color:#8c939a;">Região em foco</span><span style="font-size:30px;font-weight:500;">Região {{ tooth }}</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Cortes parassagitais</span><span style="color:#8c939a;">12</span></div>
+          <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;">
+            <sc-for list="{{ thumbs5 }}" as="c" hint-placeholder-count="5"><div onClick="{{ c.onClick }}" style="aspect-ratio:280/462;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;display:block;"></div></sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div onClick="{{ openMpr }}" style="position:relative;aspect-ratio:16/10;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;"><img src="assets/mpr/01_axial.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"><span style="position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:500;">MPR</span></div>
+          <div onClick="{{ openEvid }}" style="position:relative;aspect-ratio:16/10;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;"><img src="assets/clean/pano.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ band.objPos }};display:block;"><span style="position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:500;">Panorâmica</span></div>
+        </div>
+        <div onClick="{{ open3d }}" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #2a2e32;border-bottom:1px solid #2a2e32;cursor:pointer;">
+          <span style="display:flex;color:#c6cacf;">{{ ic.cubo }}</span>
+          <span style="flex:1;font-size:14px;">Estruturas segmentadas</span>
+          <span style="display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#bdbd62;"></span><span style="width:8px;height:8px;border-radius:50%;background:#a78fd6;"></span><span style="width:8px;height:8px;border-radius:50%;background:#e09a5c;"></span><span style="width:8px;height:8px;border-radius:50%;background:#eceae6;"></span><span style="width:8px;height:8px;border-radius:50%;background:#e5484d;"></span></span>
+          <span style="display:flex;color:#8c939a;">{{ ic.dir }}</span>
+        </div>
+        <div style="flex:1;"></div>
+        <div onClick="{{ openEvid }}" style="padding:14px 0;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;text-align:center;cursor:pointer;">Ver cortes</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ anaEvid }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Evidência" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+      <div style="height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #26292c;background:#18191b;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div onClick="{{ backResumo }}" style="display:flex;align-items:center;gap:6px;font-size:14px;color:#b4bac2;cursor:pointer;">{{ ic.esq }}Análise</div>
+          <span style="width:1px;height:20px;background:#33373b;"></span>
+          <span style="font-size:16px;font-weight:500;">Região {{ tooth }}</span>
+          <span style="font-size:14px;color:#8c939a;">Parassagital</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <div title="Corte anterior" onClick="{{ prevCut }}" style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.esq }}</div>
+          <span style="font-size:14px;font-variant-numeric:tabular-nums;min-width:104px;text-align:center;">Corte {{ cutN }} de 12</span>
+          <div title="Próximo corte" onClick="{{ nextCut }}" style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.dir }}</div>
+        </div>
+        <div style="position:relative;display:flex;align-items:center;gap:2px;">
+          <sc-for list="{{ tbEvid }}" as="t" hint-placeholder-count="9">
+            <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:20px;background:#33373b;margin:0 6px;"></span></sc-if>
+            <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};">{{ t.icon }}</div></sc-if>
+          </sc-for>
+          <sc-if value="{{ imgPop }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;right:0;top:44px;width:260px;padding:18px;background:#202326;border:1px solid #33373b;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:16px;z-index:5;">
+              <sc-for list="{{ imgSliders }}" as="s" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#b4bac2;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+              </sc-for>
+              <div onClick="{{ resetImg }}" style="display:flex;align-items:center;gap:6px;font-size:13px;color:#7fb3f5;cursor:pointer;">{{ ic.reset }}Restaurar</div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,0.78fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:4px;padding:4px;">
+        <div style="grid-row:span 2;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;outline:1px solid rgba(61,143,240,0.6);outline-offset:-1px;">
+          <div style="position:relative;height:100%;max-width:100%;aspect-ratio:280/462;">
+            <img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
+            <sc-if value="{{ measure }}" hint-placeholder-val="{{ false }}">
+              <svg viewBox="0 0 280 462" style="position:absolute;inset:0;width:100%;height:100%;">
+                <line x1="144" y1="96" x2="144" y2="206" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="96" x2="151" y2="96" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="206" x2="151" y2="206" stroke="#f2b84b" stroke-width="1.4"></line>
+                <line x1="88" y1="158" x2="212" y2="158" stroke="#f2b84b" stroke-width="1.4"></line><line x1="88" y1="151" x2="88" y2="165" stroke="#f2b84b" stroke-width="1.4"></line><line x1="212" y1="151" x2="212" y2="165" stroke="#f2b84b" stroke-width="1.4"></line>
+              </svg>
+              <span style="position:absolute;left:55%;top:24%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Altura · — mm</span>
+              <span style="position:absolute;left:30%;top:36.5%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Largura · — mm</span>
+            </sc-if>
+          </div>
+          <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>PARASSAGITAL · CORTE {{ cutN }}</span>
+        </div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_axial.png" alt="Axial" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.y }}%;left:0;right:0;height:1px;background:#3fb950;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span>AXIAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_coronal.png" alt="Coronal" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;"></span>CORONAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_sagital.png" alt="Sagital" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.y }}%;top:0;bottom:0;width:1px;background:#3fb950;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#e3b341;"></span>SAGITAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+          <div style="display:flex;gap:4px;width:100%;height:100%;align-items:center;padding:28px 6px 6px;">
+            <div style="position:relative;flex:1;min-width:0;aspect-ratio:500/282;"><img src="assets/clean/pano.png" alt="Panorâmica" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;border:1px dashed rgba(127,179,245,0.8);background:rgba(61,143,240,0.08);"></div><sc-for list="{{ panoLines }}" as="l" hint-placeholder-count="12"><span style="position:absolute;left:{{ l.left }}%;top:{{ band.top }}%;height:{{ band.h }}%;width:{{ l.w }}px;background:{{ l.bg }};"></span></sc-for></div>
+            <div style="position:relative;height:100%;aspect-ratio:432/528;flex-shrink:0;"><img src="assets/clean/arco.png" alt="Arco" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">{{ arcoOverlay }}</div>
+          </div>
+          <span style="position:absolute;left:12px;top:10px;font-size:13px;font-weight:500;">PANORÂMICA · ARCO · {{ tooth }}</span>
+        </div>
+      </div>
+      <div style="height:168px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding:6px 8px 10px;border-top:1px solid #26292c;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#8c939a;"><span>Série parassagital · Região {{ tooth }}</span><span>Vizinhos do corte {{ cutN }}</span></div>
+        <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;">
+          <sc-for list="{{ series }}" as="c" hint-placeholder-count="12">
+            <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:6px;top:4px;font-size:12px;font-weight:500;">{{ c.n }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isExplorar }}" hint-placeholder-val="{{ false }}">
+    <div style="height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #26292c;">
+      <div style="display:flex;gap:4px;">
+        <sc-for list="{{ modes }}" as="m" hint-placeholder-count="4">
+          <div onClick="{{ m.onClick }}" style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:7px;font-size:14px;cursor:pointer;{{ m.style }}"><span style="display:flex;">{{ m.icon }}</span>{{ m.label }}</div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:6px 8px 6px 14px;border:1px solid #2e3a4a;background:#1a2230;border-radius:8px;font-size:13px;">
+        <span style="color:#b4bac2;">Região {{ tooth }} · Corte {{ cutN }}</span>
+        <div onClick="{{ backAnalise }}" style="padding:4px 10px;color:#7fb3f5;font-weight:500;cursor:pointer;">Voltar à análise</div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;min-height:0;padding:0 16px 16px;gap:0;">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#101112;border:1px solid #26292c;border-radius:8px 0 0 8px;overflow:hidden;margin-top:12px;">
+        <div style="height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid #26292c;background:#18191b;">
+          <div style="display:flex;align-items:center;gap:2px;">
+            <sc-for list="{{ tbExp }}" as="t" hint-placeholder-count="10">
+              <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:20px;background:#33373b;margin:0 6px;"></span></sc-if>
+              <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};opacity:{{ t.op }};">{{ t.icon }}</div></sc-if>
+              <sc-if value="{{ t.txt }}" hint-placeholder-val="{{ false }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};opacity:{{ t.op }};">{{ t.icon }}{{ t.label }}</div></sc-if>
+            </sc-for>
+          </div>
+          <span style="font-size:12px;color:#7d848b;">{{ expStatus }}</span>
+        </div>
+        <div style="flex:1;min-height:0;position:relative;">
+
+          <sc-if value="{{ isMpr }}" hint-placeholder-val="{{ true }}">
+            <div data-screen-label="Explorar MPR" style="position:absolute;inset:0;display:grid;grid-template-columns:{{ mprCols }};grid-template-rows:{{ mprRows }};gap:3px;padding:3px;">
+              <sc-for list="{{ mprPanes }}" as="v" hint-placeholder-count="4">
+                <div style="position:relative;background:{{ v.bg }};display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0;{{ v.outline }}">
+                  <div onMouseDown="{{ v.onDown }}" style="position:relative;width:100%;aspect-ratio:{{ v.ar }};cursor:{{ v.cursor }};user-select:none;">
+                    <img src="{{ v.src }}" alt="{{ v.label }}" draggable="false" style="width:100%;height:100%;display:block;object-fit:cover;filter:{{ v.filter }};pointer-events:none;">
+                    <span style="position:absolute;left:{{ v.vx }}%;top:0;bottom:0;width:1px;background:{{ v.vc }};pointer-events:none;"></span>
+                    <span style="position:absolute;top:{{ v.hy }}%;left:0;right:0;height:1px;background:{{ v.hc }};pointer-events:none;"></span>
+                    <span style="position:absolute;left:{{ v.vx }}%;top:{{ v.hy }}%;width:14px;height:14px;margin:-7px 0 0 -7px;border:1.5px solid #fff;border-radius:50%;pointer-events:none;"></span>
+                  </div>
+                  <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;pointer-events:none;"><span style="width:7px;height:7px;border-radius:50%;background:{{ v.color }};"></span>{{ v.label }}</span>
+                  <div title="{{ v.maxTitle }}" onClick="{{ v.onMax }}" style="position:absolute;right:8px;top:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#c6cacf;cursor:pointer;">{{ v.maxIcon }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPara }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Explorar Parassagital" style="position:absolute;inset:0;display:flex;gap:12px;padding:12px;">
+              <div style="width:27%;flex-shrink:0;display:flex;flex-direction:column;gap:10px;min-height:0;">
+                <div style="position:relative;width:100%;aspect-ratio:500/282;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;"><img src="assets/clean/pano.png" alt="Panorâmica" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;background:rgba(61,143,240,0.12);"></div><sc-for list="{{ panoLines }}" as="l" hint-placeholder-count="12"><span style="position:absolute;left:{{ l.left }}%;top:{{ band.top }}%;height:{{ band.h }}%;width:{{ l.w }}px;background:{{ l.bg }};"></span></sc-for><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">PANORÂMICA</span></div>
+                <div style="position:relative;flex:1;min-height:0;background:#000;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;"><div style="position:relative;height:100%;max-width:100%;aspect-ratio:432/528;"><img src="assets/clean/arco.png" alt="Axial com arco" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">{{ arcoOverlay }}</div><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">AXIAL · ARCO</span></div>
+              </div>
+              <div style="position:relative;flex-shrink:0;height:100%;aspect-ratio:280/462;background:#000;border-radius:4px;overflow:hidden;outline:2px solid #3d8ff0;outline-offset:-2px;">
+                <img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
+                <sc-if value="{{ measure }}" hint-placeholder-val="{{ false }}">
+                  <svg viewBox="0 0 280 462" style="position:absolute;inset:0;width:100%;height:100%;"><line x1="144" y1="96" x2="144" y2="206" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="96" x2="151" y2="96" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="206" x2="151" y2="206" stroke="#f2b84b" stroke-width="1.4"></line><line x1="88" y1="158" x2="212" y2="158" stroke="#f2b84b" stroke-width="1.4"></line><line x1="88" y1="151" x2="88" y2="165" stroke="#f2b84b" stroke-width="1.4"></line><line x1="212" y1="151" x2="212" y2="165" stroke="#f2b84b" stroke-width="1.4"></line></svg>
+                  <span style="position:absolute;left:55%;top:24%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Altura</span>
+                  <span style="position:absolute;left:30%;top:36.5%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Largura</span>
+                </sc-if>
+                <span style="position:absolute;left:12px;top:10px;font-size:13px;font-weight:600;white-space:nowrap;">Corte {{ cutN }}</span>
+                <div style="position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,0.7));">
+                  <div title="Corte anterior" onClick="{{ prevCut }}" style="width:32px;height:32px;border-radius:6px;background:rgba(40,44,48,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.esq }}</div>
+                  <div title="Próximo corte" onClick="{{ nextCut }}" style="width:32px;height:32px;border-radius:6px;background:rgba(40,44,48,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.dir }}</div>
+                </div>
+              </div>
+              <div style="flex:1;min-width:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:6px;">
+                <sc-for list="{{ series }}" as="c" hint-placeholder-count="12">
+                  <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:6px;top:4px;font-size:12px;font-weight:500;">{{ c.n }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ is3d }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Explorar 3D" onMouseDown="{{ on3dDown }}" style="position:absolute;inset:0;background:#0b1526;overflow:hidden;cursor:grab;user-select:none;">
+              <sc-for list="{{ frames3d }}" as="fr" hint-placeholder-count="2"><img src="{{ fr.src }}" alt="" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:{{ fr.op }};transform:{{ fr.tf }};pointer-events:none;"></sc-for>
+              <div onMouseDown="{{ stop }}" style="position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:8px;">
+                <div style="display:flex;gap:2px;padding:3px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;"><sc-for list="{{ presets }}" as="p" hint-placeholder-count="3"><div onClick="{{ p.onClick }}" style="padding:6px 12px;border-radius:6px;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
+                <div style="display:flex;gap:2px;padding:3px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;"><sc-for list="{{ viewChips }}" as="p" hint-placeholder-count="2"><div onClick="{{ p.onClick }}" style="padding:6px 12px;border-radius:6px;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
+              </div>
+              <div onMouseDown="{{ stop }}" style="position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+                <sc-if value="{{ planesOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:4px;padding:4px;background:rgba(20,24,30,0.92);border-radius:8px;">
+                    <sc-for list="{{ miniMpr }}" as="v" hint-placeholder-count="3"><div style="position:relative;width:180px;aspect-ratio:640/285;background:#000;border-radius:4px;overflow:hidden;"><img src="{{ v.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"><span style="position:absolute;left:6px;top:4px;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:0.04em;"><span style="width:6px;height:6px;border-radius:50%;background:{{ v.color }};"></span>{{ v.label }}</span></div></sc-for>
+                  </div>
+                </sc-if>
+                <div onClick="{{ togglePlanes }}" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;cursor:pointer;color:#c6cacf;">{{ ic.grid4 }}{{ planesLabel }}</div>
+              </div>
+              <div style="position:absolute;left:14px;bottom:14px;font-size:12px;color:#7d848b;pointer-events:none;">Arraste para girar</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+            <div data-screen-label="Explorar Planejamento" style="position:absolute;inset:0;display:flex;gap:4px;padding:4px;background:#101112;">
+              <div style="position:relative;height:100%;aspect-ratio:280/462;background:#000;flex-shrink:0;overflow:hidden;outline:1px solid rgba(61,143,240,0.6);outline-offset:-1px;">
+                <img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
+                <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}">
+                  <span style="position:absolute;left:{{ pl.lineX }}%;top:{{ pl.sinusY }}%;height:{{ pl.gapH }}%;border-left:1.5px dashed #f2b84b;"></span>
+                  <span style="position:absolute;left:{{ pl.lineX }}%;top:{{ pl.sinusY }}%;margin:-10px 0 0 8px;padding:1px 6px;background:rgba(0,0,0,0.75);color:#f2b84b;font-size:11px;border-radius:3px;white-space:nowrap;">Seio maxilar · — mm</span>
+                  <div style="position:absolute;left:{{ pl.left }}%;top:{{ pl.top }}%;width:{{ pl.w }}%;height:{{ pl.h }}%;border-radius:3px 3px 30% 30%;background:repeating-linear-gradient(#e4e7ea 0 3px,#9aa2ab 3px 5px);outline:1px dashed #7fb3f5;outline-offset:3px;transform:rotate({{ impAng }}deg);transform-origin:50% 100%;"></div>
+                </sc-if>
+                <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>PARASSAGITAL · CORTE {{ cutN }}</span>
+              </div>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+                <div style="flex:1;min-height:0;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_axial.png" alt="Axial" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:70%;top:30%;width:{{ pl.axD }}px;height:{{ pl.axD }}px;transform:translate(-50%,-50%);border-radius:50%;background:rgba(228,231,234,0.9);outline:1px dashed #7fb3f5;outline-offset:3px;"></span></sc-if></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span>AXIAL</span></div>
+                <div style="flex:1;min-height:0;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_coronal.png" alt="Coronal" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:70%;top:18%;width:{{ pl.coW }}px;height:{{ pl.coH }}%;transform:translateX(-50%) rotate({{ impAng }}deg);transform-origin:50% 100%;border-radius:2px 2px 6px 6px;background:repeating-linear-gradient(#e4e7ea 0 2px,#9aa2ab 2px 4px);outline:1px dashed #7fb3f5;outline-offset:3px;"></span></sc-if></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;"></span>CORONAL</span></div>
+              </div>
+              <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;">
+                <div style="position:relative;aspect-ratio:960/680;background:#0b1526;overflow:hidden;"><img src="assets/3d/05_modelo_base.jpg" alt="Referência 3D" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ volOpacity }};"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:61%;top:30%;width:8px;height:{{ pl.refH }}px;transform:rotate({{ impAng }}deg);border-radius:2px;background:#e4e7ea;outline:1px dashed #7fb3f5;outline-offset:2px;"></span></sc-if><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">REFERÊNCIA 3D</span></div>
+                <div style="flex:1;background:#18191b;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:13px;">
+                  <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="font-weight:500;font-size:14px;">Implante 1</span><span style="color:#b4bac2;">Ø {{ impD }} × {{ impL }} mm · {{ impAng }}°</span><span style="color:#b4bac2;">Região {{ tooth }} · Corte {{ cutN }}</span></sc-if>
+                  <sc-if value="{{ noImplant }}" hint-placeholder-val="{{ true }}"><div onClick="{{ addImplant }}" style="display:flex;align-items:center;gap:8px;color:#7fb3f5;cursor:pointer;">{{ ic.mais }}Adicionar implante</div></sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+
+      <div style="width:300px;flex-shrink:0;background:#1c1e20;border:1px solid #26292c;border-left:none;border-radius:0 8px 8px 0;margin-top:12px;overflow:auto;">
+        <div style="height:48px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #26292c;font-size:15px;font-weight:500;">{{ panelTitle }}</div>
+
+        <sc-if value="{{ isMpr }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">LAYOUT</span>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:3px;background:#151617;border-radius:7px;font-size:13px;text-align:center;">
+              <sc-for list="{{ layoutOpts }}" as="o" hint-placeholder-count="4"><div onClick="{{ o.onClick }}" style="padding:6px 0;border-radius:5px;cursor:pointer;{{ o.style }}">{{ o.label }}</div></sc-for>
+            </div>
+            <div onClick="{{ toggleSync }}" style="display:flex;align-items:center;justify-content:space-between;font-size:14px;cursor:pointer;"><span>Sincronizar planos</span><span style="width:30px;height:18px;border-radius:9px;background:{{ syncBg }};position:relative;"><span style="position:absolute;left:{{ syncX }}px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left 0.15s;"></span></span></div>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">POSIÇÃO NO VOLUME</span><span onClick="{{ centerPos }}" style="font-size:12px;color:#7fb3f5;cursor:pointer;">Centralizar</span></div>
+            <sc-for list="{{ posRows }}" as="r" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.color }};"></span><span style="flex:1;">{{ r.label }}</span><span onClick="{{ r.onMinus }}" style="width:28px;height:28px;border-radius:6px;background:#26292c;display:flex;align-items:center;justify-content:center;cursor:pointer;">−</span><span onClick="{{ r.onPlus }}" style="width:28px;height:28px;border-radius:6px;background:#26292c;display:flex;align-items:center;justify-content:center;cursor:pointer;">+</span></div>
+            </sc-for>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">MEDIDAS</span>
+            <span style="font-size:13px;color:#7d848b;">Nenhuma medida</span>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isPara }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">SÉRIE</span>
+            <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Região {{ tooth }}</span><span style="color:#8c939a;">12 cortes</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:4px;background:#151617;border-radius:7px;"><div onClick="{{ prevCut }}" style="width:30px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.esq }}</div><span style="font-size:13px;font-variant-numeric:tabular-nums;">Corte {{ cutN }} de 12</span><div onClick="{{ nextCut }}" style="width:30px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.dir }}</div></div>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;margin-bottom:6px;">MEDIDAS</span>
+            <sc-if value="{{ measure }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Altura</span><span style="color:#8c939a;">— mm</span></div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;border-top:1px solid #26292c;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Largura</span><span style="color:#8c939a;">— mm</span></div>
+            </sc-if>
+            <sc-if value="{{ noMeasure }}" hint-placeholder-val="{{ true }}"><div onClick="{{ toggleMeasure }}" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#7fb3f5;cursor:pointer;">{{ ic.medir }}Medir altura e largura</div></sc-if>
+          </div>
+          <div onClick="{{ toggleParams }}" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #26292c;cursor:pointer;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">PARÂMETROS DA SÉRIE</span><span style="display:flex;color:#8c939a;transform:{{ paramsRot }};">{{ ic.chevDown }}</span></div>
+          <sc-if value="{{ paramsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;font-size:13px;border-bottom:1px solid #26292c;"><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espessura</span><span>Definida pelo exame</span></div><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espaçamento</span><span>Definido pelo motor</span></div></div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ showImgSection }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #26292c;">
+            <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">IMAGEM</span><span onClick="{{ resetImg }}" style="display:flex;align-items:center;gap:4px;font-size:12px;color:#7fb3f5;cursor:pointer;">Restaurar</span></div>
+            <sc-for list="{{ imgSliders }}" as="s" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#c6cacf;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ is3d }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 18px 8px;display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">ESTRUTURAS SEGMENTADAS</span><span onClick="{{ resetStructs }}" style="font-size:12px;color:#7fb3f5;cursor:pointer;">Restaurar</span></div>
+          <div style="padding:0 10px 12px;display:flex;flex-direction:column;gap:2px;">
+            <sc-for list="{{ structs }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;flex-direction:column;gap:12px;padding:9px 8px;border-radius:6px;{{ s.rowStyle }}">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div title="{{ s.eyeTitle }}" onClick="{{ s.onEye }}" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{ s.eyeColor }};">{{ s.eye }}</div>
+                  <span style="width:10px;height:10px;border-radius:3px;background:{{ s.color }};flex-shrink:0;"></span>
+                  <span onClick="{{ s.onSel }}" style="flex:1;font-size:14px;cursor:pointer;opacity:{{ s.textOp }};">{{ s.name }}</span>
+                  <span style="font-size:12px;color:#8c939a;font-variant-numeric:tabular-nums;">{{ s.opTxt }}</span>
+                </div>
+                <sc-if value="{{ s.selected }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ s.onSlide }}" style="position:relative;height:16px;margin-left:36px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div>
+                  <div style="display:flex;gap:8px;margin-left:36px;"><div onClick="{{ s.onIsolar }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid #3a3f44;border-radius:6px;font-size:12px;cursor:pointer;">{{ ic.isolar }}Isolar</div></div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="padding:14px 18px;border-top:1px solid #26292c;display:flex;align-items:center;gap:10px;font-size:13px;color:#7d848b;"><span style="display:flex;">{{ ic.dente }}</span>Dente em foco: selecione um dente no modelo</div>
+        </sc-if>
+
+        <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;margin-bottom:4px;">OBJETOS</span>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:6px 0;"><span style="width:8px;height:8px;border-radius:50%;background:#e5484d;"></span><span style="flex:1;">Canal mandibular</span><span style="font-size:12px;color:#8c939a;">segmentado</span></div>
+            <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:8px 10px;margin:0 -10px;background:#1d2734;border-radius:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#3d8ff0;"></span><span style="flex:1;">Implante 1</span><span style="font-size:12px;color:#b4bac2;">Ø{{ impD }} × {{ impL }}</span><span onClick="{{ removeImplant }}" title="Remover" style="display:flex;color:#8c939a;cursor:pointer;">{{ ic.limpar }}</span></div></sc-if>
+          </div>
+          <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #26292c;">
+              <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">IMPLANTE 1</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:14px;"><span>Diâmetro</span><div style="display:flex;gap:2px;padding:2px;background:#151617;border-radius:6px;"><sc-for list="{{ dOpts }}" as="o" hint-placeholder-count="3"><span onClick="{{ o.onClick }}" style="padding:4px 9px;border-radius:4px;font-size:13px;cursor:pointer;{{ o.style }}">{{ o.label }}</span></sc-for></div></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:14px;"><span>Comprimento</span><div style="display:flex;gap:2px;padding:2px;background:#151617;border-radius:6px;"><sc-for list="{{ lOpts }}" as="o" hint-placeholder-count="4"><span onClick="{{ o.onClick }}" style="padding:4px 8px;border-radius:4px;font-size:13px;cursor:pointer;{{ o.style }}">{{ o.label }}</span></sc-for></div></div>
+              <sc-for list="{{ angSlider }}" as="s" hint-placeholder-count="1">
+                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">RELAÇÃO ANATÔMICA</span>
+            <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:#c6cacf;">Ápice ao seio maxilar</span><span style="color:#8c939a;">—</span></div>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">TRANSPARÊNCIA</span>
+            <sc-for list="{{ volSlider }}" as="s" hint-placeholder-count="1">
+              <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+            </sc-for>
+            <div onClick="{{ toggleCanal }}" style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><span style="width:18px;height:18px;border-radius:4px;background:{{ canalBg }};border:1px solid #3d8ff0;display:flex;align-items:center;justify-content:center;color:#fff;">{{ canalCheck }}</span>Destacar canal mandibular</div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</sc-if>
+
+<sc-if value="{{ isPresent }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Apresentar ao paciente" style="flex:1;display:flex;flex-direction:column;min-height:0;background:#0b1526;">
+    <div style="height:64px;flex-shrink:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 20px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div title="Voltar" onClick="{{ closePresent }}" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.esq }}</div>
+        <span style="font-size:17px;font-weight:500;">Ana Souza</span>
+      </div>
+      <div style="display:flex;gap:2px;padding:3px;background:rgba(255,255,255,0.06);border-radius:9px;">
+        <sc-for list="{{ comps }}" as="c" hint-placeholder-count="3"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:8px;padding:8px 18px;border-radius:7px;font-size:14px;cursor:pointer;{{ c.style }}"><span style="display:flex;">{{ c.icon }}</span>{{ c.label }}</div></sc-for>
+      </div>
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;">
+        <div onClick="{{ closePresent }}" style="padding:10px 18px;border:1px solid rgba(255,255,255,0.16);border-radius:8px;font-size:14px;cursor:pointer;">Concluir apresentação</div>
+        <div onClick="{{ exportImg }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.download }}{{ exportLabel }}</div>
+      </div>
+    </div>
+    <div style="flex:1;min-height:0;position:relative;margin:0 16px 16px;border-radius:12px;overflow:hidden;background:{{ stageBg }};">
+      <div onClick="{{ onStage }}" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:{{ stageCursor }};">
+        <sc-if value="{{ p3d }}" hint-placeholder-val="{{ true }}">
+          <div style="position:relative;height:96%;max-width:100%;aspect-ratio:960/680;"><img src="{{ pImg3d }}" alt="3D" style="width:100%;height:100%;display:block;"></div>
+        </sc-if>
+        <sc-if value="{{ p3dev }}" hint-placeholder-val="{{ false }}">
+          <div style="width:100%;height:100%;display:grid;grid-template-columns:3fr 2fr;gap:0;">
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;min-width:0;"><div style="position:relative;width:100%;aspect-ratio:960/680;"><img src="{{ pImg3d }}" alt="3D" style="width:100%;height:100%;display:block;"><span style="position:absolute;left:62%;top:38%;width:64px;height:64px;transform:translate(-50%,-50%);border:2.5px solid #f2b84b;border-radius:50%;"></span><span style="position:absolute;left:62%;top:38%;margin:-58px 0 0 26px;padding:3px 10px;background:#f2b84b;color:#1a1406;font-size:14px;font-weight:600;border-radius:4px;">26</span></div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px 40px 28px 8px;min-width:0;">
+              <div style="position:relative;height:86%;max-width:100%;aspect-ratio:280/462;border-radius:8px;overflow:hidden;outline:2.5px solid #f2b84b;outline-offset:-2px;background:#000;"><img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;"></div>
+              <span style="font-size:16px;font-weight:500;">Região 26 · Corte {{ cutN }}</span>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ pPano }}" hint-placeholder-val="{{ false }}">
+          <div style="position:relative;width:90%;max-height:94%;aspect-ratio:500/282;"><img src="assets/clean/pano.png" alt="Panorâmica" style="width:100%;height:100%;display:block;border-radius:6px;"><div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;border:2.5px solid #f2b84b;border-radius:50%;"></div><span style="position:absolute;left:{{ band.left }}%;top:{{ band.labelTop }}%;margin:-34px 0 0 0;padding:3px 10px;background:#f2b84b;color:#1a1406;font-size:14px;font-weight:600;border-radius:4px;">26</span></div>
+        </sc-if>
+        {{ marksOverlay }}
+      </div>
+      <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;padding:5px;background:rgba(20,24,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+        <sc-for list="{{ pTools }}" as="t" hint-placeholder-count="7">
+          <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="height:1px;background:rgba(255,255,255,0.1);margin:4px 6px;"></span></sc-if>
+          <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:56px;padding:8px 0 6px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};font-size:11px;">{{ t.icon }}{{ t.title }}</div></sc-if>
+        </sc-for>
+      </div>
+      <div style="position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:5px 6px 5px 14px;background:rgba(20,24,30,0.92);border:1px solid rgba(255,255,255,0.08);border-radius:999px;">
+        <span style="font-size:13px;color:#b4bac2;margin-right:4px;">Destacar</span>
+        <sc-for list="{{ hiChips }}" as="c" hint-placeholder-count="4"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:13px;cursor:pointer;{{ c.style }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ c.color }};"></span>{{ c.label }}</div></sc-for>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    screen: 'home', patient: false, cbct: false, file: false,
+    alignMode: 'review', align: { h: 0, v: 0, r: 0 }, alignSaved: { h: 0, v: 0, r: 0 }, applied: false,
+    processing: false, progress: 0,
+    top: 'analise', anaView: 'resumo', anaViewer: 'pano', mode: 'mpr', cut: 6, tooth: '26',
+    measure: false, imgPop: false, bri: 50, con: 50, mprLayout: '2x2', sync: true, paramsOpen: false, tool: 'mover',
+    vis: { maxila: true, mandibula: true, dsup: true, dinf: true, canal: true },
+    op: { maxila: 30, mandibula: 40, dsup: 100, dinf: 100, canal: 100 }, sel3d: 'mandibula', preset: 'translucida',
+    implant: false, impD: '4', impL: '10', impAng: 0, volOp: 100, canalHi: true,
+    pComp: '3d', pTool: 'selecionar', marks: [], pHi: { canal: true }, pos: { x: 66, y: 38, z: 48 }, vp: {}, ang: 0, planesOpen: false, exported: false
+  };
+  wizRef = React.createRef();
+  componentDidUpdate(pp, ps) {
+    const el = this.wizRef.current;
+    if (el && this.state.screen === 'wizard') {
+      const k = s => [s.patient, s.cbct, s.file, s.alignMode, s.processing].join();
+      if (k(ps) !== k(this.state)) setTimeout(() => el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }), 30);
+    }
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  icons() {
+    if (this._ic) return this._ic;
+    const h = React.createElement;
+    const S = (...ch) => h('svg', { width: 18, height: 18, viewBox: '0 0 18 18', fill: 'none', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round', style: { display: 'block', flexShrink: 0 } }, ...ch);
+    const p = d => h('path', { d }), c = (cx, cy, r, f) => h('circle', { cx, cy, r, fill: f ? 'currentColor' : 'none', stroke: f ? 'none' : 'currentColor' }), r = (x, y, w, hh, rx) => h('rect', { x, y, width: w, height: hh, rx: rx || 1 });
+    this._ic = {
+      selecionar: S(p('M4 2.5l10 6-4.6 1.3L7.3 14.5z')),
+      mover: S(p('M9 2v14M2 9h14M7 4l2-2 2 2M7 14l2 2 2-2M4 7L2 9l2 2M14 7l2 2-2 2')),
+      zoom: S(c(7.5, 7.5, 5), p('M11.2 11.2L16 16')),
+      zoomIn: S(c(7.5, 7.5, 5), p('M11.2 11.2L16 16M5.5 7.5h4M7.5 5.5v4')),
+      zoomOut: S(c(7.5, 7.5, 5), p('M11.2 11.2L16 16M5.5 7.5h4')),
+      brilho: S(c(9, 9, 6.5), h('path', { d: 'M9 2.5a6.5 6.5 0 0 1 0 13z', fill: 'currentColor', stroke: 'none' })),
+      medir: S(p('M3 15L15 3M1.5 13.5l3 3M13.5 1.5l3 3M6.5 10.5l1.5 1.5M9.5 7.5l1.5 1.5')),
+      ajustar: S(r(2, 3.5, 14, 11), r(6, 6.5, 6, 5)),
+      maximizar: S(r(2.5, 2.5, 13, 13, 2), p('M10 8l3.5-3.5M10.5 4.5h3v3')),
+      telacheia: S(p('M2.5 6.5v-4h4M11.5 2.5h4v4M15.5 11.5v4h-4M6.5 15.5h-4v-4')),
+      reset: S(p('M4 9a5 5 0 1 0 1.6-3.7M4.5 2.5V6H8')),
+      maisH: S(c(4, 9, 1.3, 1), c(9, 9, 1.3, 1), c(14, 9, 1.3, 1)),
+      rotacionar: S(p('M15 9a6 6 0 1 1-2.2-4.6M13.5 1.5V5H10')),
+      olho: S(p('M1.5 9s3-5 7.5-5 7.5 5 7.5 5-3 5-7.5 5-7.5-5-7.5-5z'), c(9, 9, 2.2, 1)),
+      olhoOff: S(p('M1.5 9s3-5 7.5-5 7.5 5 7.5 5-3 5-7.5 5-7.5-5-7.5-5zM3 15L15 3')),
+      esq: S(p('M11 3.5L5.5 9l5.5 5.5')), dir: S(p('M7 3.5L12.5 9 7 14.5')), chevDown: S(p('M4 7l5 5 5-5')),
+      check: S(p('M4 9.5l3.2 3L14 5.5')),
+      seta: S(p('M3 15L14 4M8 4h6v6')), circulo: S(c(9, 9, 6.5)), texto: S(p('M3.5 4h11M9 4v11')),
+      caneta: S(p('M3 15l2.6-.6 8.9-8.9-2-2-8.9 8.9z')),
+      desfazer: S(p('M6 7h6a3.5 3.5 0 0 1 0 7H7M8.5 4L5.5 7l3 3')),
+      limpar: S(p('M4 5h10M7 5V3h4v2M5.5 5l.8 10h5.4l.8-10')),
+      analise: S(p('M3 15l8.5-8.5M10 4.5l3.5 3.5M13 1.5v2M15.5 4h-2M5 2v2M6 3H4')),
+      camadas: S(p('M9 2l7 4-7 4-7-4zM2 10l7 4 7-4')),
+      grid4: S(r(2.5, 2.5, 5.5, 5.5), r(10, 2.5, 5.5, 5.5), r(2.5, 10, 5.5, 5.5), r(10, 10, 5.5, 5.5)),
+      para: S(p('M5 3v12M9 3v12M13 3v12')),
+      cubo: S(p('M9 2l6.5 3.5v7L9 16l-6.5-3.5v-7zM9 9v7M9 9l6.5-3.5M9 9L2.5 5.5')),
+      plan: S(p('M7 2h4v3H7zM6.5 5h5l-.6 7.5L9 16l-1.9-3.5z')),
+      apresentar: S(r(2, 3, 14, 9), p('M9 12v3M6 15.5h6')),
+      download: S(p('M9 2.5v9M5 8l4 4 4-4M3 15.5h12')),
+      upload: S(p('M9 12V2.5M5 6l4-4 4 4M3 15.5h12')),
+      pessoa: S(c(9, 6, 3), p('M3 16c.8-3.3 3.2-5 6-5s5.2 1.7 6 5')),
+      casa: S(p('M2.5 8.5L9 3l6.5 5.5M4.5 7v8h9V7')),
+      tabela: S(r(2.5, 3.5, 13, 11), p('M2.5 7.5h13M2.5 11h13M7 3.5v11M11 3.5v11')),
+      predio: S(p('M3 16V4h7v12M10 8h5v8M5.5 7h2M5.5 10h2M5.5 13h2M12 11h1')),
+      livro: S(p('M4 3h9v12H5.5A1.5 1.5 0 0 1 4 13.5zM4 13.5A1.5 1.5 0 0 1 5.5 12H13')),
+      pacientes: S(c(6.5, 6, 2.5), p('M2 15c.5-2.6 2.3-4 4.5-4s4 1.4 4.5 4M11 4h5M11 7h5M12.5 10h3.5')),
+      moedas: S(h('ellipse', { cx: 9, cy: 5, rx: 5, ry: 2 }), p('M4 5v8c0 1.1 2.2 2 5 2s5-.9 5-2V5M4 9c0 1.1 2.2 2 5 2s5-.9 5-2')),
+      presente: S(r(2.5, 7.5, 13, 8), r(1.5, 5, 15, 2.5), p('M9 5v10.5M9 5C7 2 4.5 3 6 5M9 5c2-3 4.5-2 3 0')),
+      engrenagem: S(c(9, 9, 2.6), p('M9 1.5v2.3M9 14.2v2.3M1.5 9h2.3M14.2 9h2.3M3.7 3.7l1.6 1.6M12.7 12.7l1.6 1.6M3.7 14.3l1.6-1.6M12.7 5.3l1.6-1.6'), c(9, 9, 5.4)),
+      dente: S(p('M5 2.5c-2 0-3 2-2.5 4.5.4 2 1 3 1.4 6 .3 1.6 1.8 1.6 2.1-.1L6.7 10.5h4.6l.7 2.4c.3 1.7 1.8 1.7 2.1.1.4-3 1-4 1.4-6C16 4.5 15 2.5 13 2.5c-1.5 0-2.5 1-4 1s-2.5-1-4-1z')),
+      panoramica: S(p('M3.5 7h11M3.5 11h11')),
+      interprox: S(r(3, 3, 12, 12, 2), p('M9 3v12M3 9h12')),
+      levantamento: S(c(4.5, 6.5, 1.3, 1), c(9, 6.5, 1.3, 1), c(13.5, 6.5, 1.3, 1), c(4.5, 11.5, 1.3, 1), c(9, 11.5, 1.3, 1), c(13.5, 11.5, 1.3, 1)),
+      arquivo: S(p('M5 2h6l3 3v11H5zM11 2v3h3M9.5 8v5M7 10.5h5')),
+      mais: S(p('M9 3.5v11M3.5 9h11')),
+      ficha: S(r(3.5, 2, 11, 14, 2), c(9, 7.5, 2), p('M6 12.5c.6-1.4 1.7-2 3-2s2.4.6 3 2')),
+      cadeado: S(r(4, 8, 10, 7.5, 1.5), p('M6 8V5.5a3 3 0 0 1 6 0V8')),
+      ajustes: S(p('M3 5h12M3 9h12M3 13h12'), c(6, 5, 1.4, 1), c(12, 9, 1.4, 1), c(8, 13, 1.4, 1)),
+      isolar: S(c(9, 9, 6.5), c(9, 9, 2.5, 1)),
+      painel: S(r(2.5, 3, 13, 12), p('M11 3v12'))
+    };
+    return this._ic;
+  }
+  slider(label, value, min, max, fmt, set) {
+    const pct = ((value - min) / (max - min)) * 100;
+    return { label, val: fmt(value), pct: pct.toFixed(1), onClick: e => { const b = e.currentTarget.getBoundingClientRect(); const t = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); set(Math.round(min + t * (max - min))); } };
+  }
+  tb(items, active) {
+    const ic = this.icons();
+    return items.map(it => {
+      if (it === '|') return { sep: true, btn: false, txt: false };
+      const on = it.on || (active && it.k === active);
+      return { sep: false, btn: !it.label, txt: !!it.label, label: it.label || '', title: it.t, icon: ic[it.i], onClick: it.f || (() => it.k && this.setState({ tool: it.k })), bg: on ? '#22324a' : 'transparent', fg: on ? '#7fb3f5' : '#c6cacf', op: it.dis ? 0.4 : 1 };
+    });
+  }
+  baseVals() {
+    const s = this.state, ic = this.icons(), set = o => this.setState(o);
+    const seg = on => on ? 'background:#2c3a4d;color:#ebecee;' : 'color:#9ba1a8;';
+    const segN = on => on ? 'background:#2c3034;color:#ebecee;' : 'color:#9ba1a8;';
+    const scr = s.screen;
+    // wizard
+    const step = !s.patient ? 1 : !s.cbct ? 2 : !s.file ? 3 : !s.processing ? 4 : 5;
+    const circ = n => {
+      const done = step > n || (n === 5 && s.progress >= 100), act = step === n && !done;
+      return {
+        style: `width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:500;flex-shrink:0;${done || act ? 'background:#3d8ff0;color:#fff;' : 'border:2px solid #5a6066;color:#b4bac2;'}`,
+        content: done ? ic.check : String(n),
+        card: `border-radius:10px;padding:26px 32px;background:#26292c;border:1px solid ${act ? '#3d8ff0' : '#33373b'};${step < n ? 'opacity:0.55;' : ''}`
+      };
+    };
+    const types = [['Panorâmica', 'panoramica'], ['Periapical', 'dente'], ['Interproximal', 'interprox'], ['Levantamento periapical', 'levantamento'], ['Tomografia (CBCT)', 'cubo']];
+    const examTypes = types.map(([label, i], k) => {
+      const sel = k === 4 && s.cbct;
+      return { label, icon: ic[i], onClick: () => this.setState(st => (st.patient && k === 4 ? { cbct: true } : null)), style: `display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:8px;cursor:${s.patient ? 'pointer' : 'default'};background:${sel ? '#2f3b49' : '#2c2f33'};border:1px solid ${sel ? '#3d8ff0' : 'transparent'};color:${s.patient ? '#ebecee' : '#7d848b'};` };
+    });
+    const rot = v => `rotate(${v}deg)`;
+    const a = s.align;
+    const deg = v => (v > 0 ? '+' : '') + v + '°';
+    const alignSliders = [
+      this.slider('Inclinação horizontal', a.h, -20, 20, deg, v => set({ align: { ...s.align, h: v } })),
+      this.slider('Inclinação vertical', a.v, -20, 20, deg, v => set({ align: { ...s.align, v } })),
+      this.slider('Rotação', a.r, -20, 20, deg, v => set({ align: { ...s.align, r: v } }))
+    ];
+    const procLabels = ['Reconstrução do volume', 'Panorâmica e arco', 'Cortes parassagitais', 'Segmentação'];
+    const procItems = procLabels.map((label, k) => { const d = s.progress >= (k + 1) * 25; return { label, icon: d ? ic.check : ic.reset, color: d ? '#ebecee' : '#7d848b' }; });
+    // region geometry
+    const up = ['18', '17', '16', '15', '14', '13', '12', '11', '21', '22', '23', '24', '25', '26', '27', '28'];
+    const lo = ['48', '47', '46', '45', '44', '43', '42', '41', '31', '32', '33', '34', '35', '36', '37', '38'];
+    const isUp = up.includes(s.tooth), idx = (isUp ? up : lo).indexOf(s.tooth);
+    const cx = 6 + idx * (88 / 15), bw = 12;
+    const band = { left: (cx - bw / 2).toFixed(2), w: bw, top: isUp ? 2 : 36, h: isUp ? 38 : 50, labelTop: isUp ? 2 : 36, objPos: `${(cx).toFixed(0)}% 50%` };
+    const lineAt = k => (cx - bw / 2) + bw * (k + 0.5) / 12;
+    const panoLines = Array.from({ length: 12 }, (_, k) => ({ left: lineAt(k).toFixed(2), w: k === s.cut ? 2 : 1, bg: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.4)' }));
+    const tooth = (n) => ({ n, onClick: () => set({ tooth: n }), style: n === s.tooth ? 'background:#2f3b49;border:1px solid #3d8ff0;color:#ebecee;' : 'background:#232629;border:1px solid transparent;color:#9ba1a8;' });
+    const cutSrc = k => `assets/clean/corte_${String(k).padStart(2, '0')}.png`;
+    const series = Array.from({ length: 12 }, (_, k) => {
+      const d = Math.abs(k - s.cut);
+      return { src: cutSrc(k), n: k + 1, onClick: () => set({ cut: k }), op: k === s.cut ? 1 : d <= 2 ? 0.92 : 0.6, style: k === s.cut ? 'outline:2px solid #3d8ff0;outline-offset:-2px;' : d <= 2 ? 'outline:1px solid rgba(242,184,75,0.55);outline-offset:-1px;' : '' };
+    });
+    const thumbs5 = [4, 5, 6, 7, 8].map(k => ({ src: cutSrc(k), onClick: () => set({ cut: k, anaView: 'evidencia' }), style: k === s.cut ? 'outline:2px solid #3d8ff0;outline-offset:-2px;' : '' }));
+    const imgFilter = `brightness(${(0.5 + s.bri / 100).toFixed(2)}) contrast(${(0.5 + s.con / 100).toFixed(2)})`;
+    const pctFmt = v => (v * 2) + '%';
+    const imgSliders = [this.slider('Brilho', s.bri, 0, 100, pctFmt, v => set({ bri: v })), this.slider('Contraste', s.con, 0, 100, pctFmt, v => set({ con: v }))];
+    const prevCut = () => set({ cut: Math.max(0, s.cut - 1) }), nextCut = () => set({ cut: Math.min(11, s.cut + 1) });
+    const toggleMeasure = () => set({ measure: !s.measure, tool: 'medir' });
+    // arco overlay
+    const h = React.createElement, lerp = (x, y, t) => x + (y - x) * t;
+    const arcoOverlay = h('svg', { viewBox: '0 0 432 528', style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
+      h('polygon', { points: '316,44 360,150 318,168 280,74', fill: 'rgba(61,143,240,0.16)', stroke: '#3d8ff0', strokeWidth: 1.2 }),
+      ...Array.from({ length: 12 }, (_, k) => { const t = (k + 0.5) / 12; return h('line', { key: k, x1: lerp(316, 360, t), y1: lerp(44, 150, t), x2: lerp(280, 318, t), y2: lerp(74, 168, t), stroke: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.5)', strokeWidth: k === s.cut ? 4 : 1.2 }); }));
+    // explorar
+    const modeDefs = [['mpr', 'MPR', 'grid4'], ['para', 'Parassagital', 'para'], ['3d', 'Visão 3D', 'cubo'], ['plan', 'Planejamento', 'plan']];
+    const modes = modeDefs.map(([k, label, i]) => ({ label, icon: ic[i], onClick: () => set({ mode: k }), style: s.mode === k ? 'background:#2c3034;color:#ebecee;box-shadow:inset 0 0 0 1px #3a3f44;' : 'color:#9ba1a8;' }));
+    const base = [{ k: 'selecionar', i: 'selecionar', t: 'Selecionar' }, { k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, { k: 'brilho', i: 'brilho', t: 'Brilho / contraste' }, { k: 'medir', i: 'medir', t: 'Medir', f: toggleMeasure, on: s.measure }, '|', { i: 'ajustar', t: 'Ajustar à tela', f: () => {} }, { i: 'maximizar', t: 'Maximizar plano', f: () => set({ mprLayout: s.mprLayout === '2x2' ? 'axial' : '2x2' }) }, { i: 'reset', t: 'Restaurar', f: () => this.resetMpr() }, { i: 'telacheia', t: 'Tela cheia', f: () => {} }, '|', { i: 'maisH', t: 'Mais opções', f: () => {} }];
+    const t3d = [{ k: 'selecionar', i: 'selecionar', t: 'Selecionar' }, { k: 'rotacionar', i: 'rotacionar', t: 'Rotacionar' }, { k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, '|', { i: 'reset', t: 'Restaurar vista', f: () => this.resetStructs() }, { i: 'telacheia', t: 'Tela cheia', f: () => {} }, '|', { i: 'isolar', t: 'Isolar seleção', label: 'Isolar', f: () => this.isolar(s.sel3d) }, { i: 'dente', t: 'Selecione um dente no modelo', label: 'Dente em foco', dis: true, f: () => {} }];
+    const tPlan = [{ k: 'selecionar', i: 'selecionar', t: 'Selecionar' }, { k: 'rotacionar', i: 'rotacionar', t: 'Rotacionar' }, { k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, { k: 'medir', i: 'medir', t: 'Medir' }, '|', { i: 'reset', t: 'Restaurar vista', f: () => {} }, { i: 'telacheia', t: 'Tela cheia', f: () => {} }, '|', { i: 'mais', t: 'Adicionar implante', label: 'Adicionar implante', f: () => set({ implant: true }), dis: s.implant }];
+    const tbExp = this.tb(s.mode === '3d' ? t3d : s.mode === 'plan' ? tPlan : base, s.tool);
+    const tbEvid = this.tb([{ k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, { i: 'brilho', t: 'Imagem', f: () => set({ imgPop: !s.imgPop }), on: s.imgPop }, { i: 'medir', t: 'Medir', f: toggleMeasure, on: s.measure }, '|', { i: 'maximizar', t: 'Abrir no Explorar exame', f: () => set({ top: 'explorar', mode: 'para', imgPop: false }) }, { i: 'cubo', t: 'Ver em 3D', f: () => set({ top: 'explorar', mode: '3d', imgPop: false }) }, { i: 'grid4', t: 'Planos no MPR', f: () => set({ top: 'explorar', mode: 'mpr', imgPop: false }) }, '|', { i: 'telacheia', t: 'Tela cheia', f: () => {} }], s.tool);
+    const tbAnalise = this.tb([{ k: 'mover', i: 'mover', t: 'Mover' }, { i: 'zoomIn', t: 'Aproximar', f: () => {} }, { i: 'zoomOut', t: 'Afastar', f: () => {} }, '|', { i: 'ajustar', t: 'Ajustar à tela', f: () => {} }, { i: 'reset', t: 'Restaurar', f: () => {} }], s.tool);
+    const planes = [['axial', 'AXIAL', 'assets/mpr/01_axial.jpg', '#e5484d'], ['coronal', 'CORONAL', 'assets/mpr/02_coronal.jpg', '#3fb950'], ['sagital', 'SAGITAL', 'assets/mpr/03_sagital.jpg', '#e3b341']];
+    const mprViews = planes.map(([k, label, src, color]) => ({ label, src, color, onMax: () => set({ mprLayout: k }), outline: k === 'axial' ? 'outline:1px solid rgba(229,72,77,0.7);outline-offset:-1px;' : '' }));
+    const single = planes.find(p => p[0] === s.mprLayout) || planes[0];
+    const layoutOpts = [['2x2', '2×2'], ['axial', 'Axial'], ['coronal', 'Coronal'], ['sagital', 'Sagital']].map(([k, label]) => ({ label, onClick: () => set({ mprLayout: k }), style: segN(s.mprLayout === k) }));
+    // 3d
+    const sd = [['maxila', 'Maxila', '#bdbd62'], ['mandibula', 'Mandíbula', '#a78fd6'], ['dsup', 'Dentes superiores', '#e09a5c'], ['dinf', 'Dentes inferiores', '#eceae6'], ['canal', 'Canal mandibular', '#e5484d']];
+    const structs = sd.map(([k, name, color]) => {
+      const on = s.vis[k], sel = s.sel3d === k;
+      return { name, color, eye: on ? ic.olho : ic.olhoOff, eyeTitle: on ? 'Ocultar' : 'Mostrar', eyeColor: on ? '#c6cacf' : '#6d737a', textOp: on ? 1 : 0.5, opTxt: on ? s.op[k] + '%' : 'Oculto', selected: sel,
+        rowStyle: sel ? 'background:#1d2734;' : '', onSel: () => set({ sel3d: k }), onEye: () => set({ vis: { ...s.vis, [k]: !on }, preset: '' }),
+        pct: s.op[k], onSlide: e => { const b = e.currentTarget.getBoundingClientRect(); const v = Math.round(Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)) * 100); set({ op: { ...s.op, [k]: v }, preset: '' }); }, onIsolar: () => this.isolar(k) };
+    });
+    const img3d = !s.vis.maxila ? 'assets/3d/01_segmentacao_completa.jpg' : (s.op.maxila >= 90 && s.op.mandibula >= 90) ? 'assets/3d/02_segmentacao_frontal.jpg' : 'assets/3d/05_modelo_base.jpg';
+    const presetDefs = [['translucida', 'Translúcida', () => set({ preset: 'translucida', vis: { maxila: true, mandibula: true, dsup: true, dinf: true, canal: true }, op: { ...s.op, maxila: 30, mandibula: 40 } })], ['opaca', 'Opaca', () => set({ preset: 'opaca', vis: { maxila: true, mandibula: true, dsup: true, dinf: true, canal: true }, op: { ...s.op, maxila: 100, mandibula: 100 } })], ['canal', 'Canal em foco', () => set({ preset: 'canal', vis: { ...s.vis, maxila: false, canal: true, mandibula: true }, op: { ...s.op, mandibula: 30 }, sel3d: 'canal' })]];
+    const presets = presetDefs.map(([k, label, f]) => ({ label, onClick: f, style: segN(s.preset === k) }));
+    const miniMpr = planes.map(([k, label, src, color]) => ({ label, src, color }));
+    // plan
+    const dOpts = ['3,5', '4', '4,5'].map(v => ({ label: v, onClick: () => set({ impD: v }), style: segN(s.impD === v) }));
+    const lOpts = ['8', '10', '11,5', '13'].map(v => ({ label: v, onClick: () => set({ impL: v }), style: segN(s.impL === v) }));
+    const dn = parseFloat(s.impD.replace(',', '.')), ln = parseFloat(s.impL.replace(',', '.'));
+    const planViews = [['SAGITAL', cutSrc(s.cut), '#e3b341'], ['CORONAL', 'assets/mpr/02_coronal.jpg', '#3fb950'], ['AXIAL', 'assets/mpr/01_axial.jpg', '#e5484d']].map(([label, src, color]) => ({ label, src, color }));
+    // present
+    const pImg3d = s.pHi.nervo ? 'assets/3d/01_segmentacao_completa.jpg' : 'assets/3d/05_modelo_base.jpg';
+    const compDefs = [['3d', '3D', 'cubo'], ['3dev', '3D + evidência', 'painel'], ['pano', 'Panorâmica', 'panoramica']];
+    const comps = compDefs.map(([k, label, i]) => ({ label, icon: ic[i], onClick: () => set({ pComp: k }), style: segN(s.pComp === k) }));
+    const ptDefs = [['selecionar', 'Selecionar', 'selecionar'], ['seta', 'Seta', 'seta'], ['texto', 'Texto', 'texto'], ['desenhar', 'Desenhar', 'circulo'], ['medir', 'Medir', 'medir']];
+    const pTools = [...ptDefs.map(([k, title, i]) => ({ sep: false, btn: true, title, icon: ic[i], onClick: () => set({ pTool: k }), bg: s.pTool === k ? '#22324a' : 'transparent', fg: s.pTool === k ? '#7fb3f5' : '#c6cacf' })), { sep: true, btn: false },
+      { sep: false, btn: true, title: 'Desfazer', icon: ic.desfazer, onClick: () => set({ marks: s.marks.slice(0, -1) }), bg: 'transparent', fg: s.marks.length ? '#c6cacf' : '#6d737a' },
+      { sep: false, btn: true, title: 'Limpar', icon: ic.limpar, onClick: () => set({ marks: [] }), bg: 'transparent', fg: s.marks.length ? '#c6cacf' : '#6d737a' }];
+    const onStage = e => {
+      if (s.pTool === 'selecionar') return;
+      const b = e.currentTarget.getBoundingClientRect();
+      set({ marks: [...s.marks, { t: s.pTool, x: ((e.clientX - b.left) / b.width) * 100, y: ((e.clientY - b.top) / b.height) * 100 }] });
+    };
+    const AM = '#f2b84b';
+    const marksOverlay = h('svg', { style: { position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' } },
+      ...s.marks.map((m, k) => {
+        const X = m.x + '%', Y = m.y + '%';
+        if (m.t === 'seta') return h('g', { key: k }, h('line', { x1: (m.x - 6) + '%', y1: (m.y + 8) + '%', x2: X, y2: Y, stroke: AM, strokeWidth: 3 }), h('circle', { cx: X, cy: Y, r: 6, fill: AM }));
+        if (m.t === 'desenhar') return h('ellipse', { key: k, cx: X, cy: Y, rx: 60, ry: 44, fill: 'none', stroke: AM, strokeWidth: 3 });
+        if (m.t === 'medir') return h('g', { key: k }, h('line', { x1: X, y1: Y, x2: (m.x + 10) + '%', y2: Y, stroke: AM, strokeWidth: 2 }), h('circle', { cx: X, cy: Y, r: 4, fill: AM }), h('circle', { cx: (m.x + 10) + '%', cy: Y, r: 4, fill: AM }));
+        return h('g', { key: k }, h('rect', { x: X, y: Y, width: 118, height: 30, rx: 4, fill: AM, transform: 'translate(0,-15)' }), h('text', { x: X, y: Y, dx: 12, dy: 5, fill: '#1a1406', fontSize: 15, fontWeight: 600, fontFamily: 'IBM Plex Sans, sans-serif' }, 'Região ' + s.tooth));
+      }));
+    const markNames = { seta: ['Seta', 'seta'], texto: ['Texto · Região ' + s.tooth, 'texto'], desenhar: ['Destaque', 'circulo'], medir: ['Medida', 'medir'] };
+    const markList = s.marks.map(m => ({ label: markNames[m.t][0], icon: ic[markNames[m.t][1]] }));
+    const hiDefs = [['nervo', 'Nervo', '#e5484d'], ['dsup', 'Dentes sup.', '#e09a5c'], ['dinf', 'Dentes inf.', '#eceae6'], ['mandibula', 'Mandíbula', '#a78fd6'], ['maxila', 'Maxila', '#bdbd62']];
+    const hiChips = hiDefs.map(([k, label, color]) => ({ label, color, onClick: () => set({ pHi: { ...s.pHi, [k]: !s.pHi[k] } }), style: s.pHi[k] ? 'background:#1d2734;box-shadow:inset 0 0 0 1px #3d8ff0;' : 'background:#232629;' }));
+
+    const dioNavDefs = [['Início', 'casa'], ['Análises', 'tabela'], ['Clínicas', 'predio'], ['Conteúdos', 'livro'], ['Pacientes', 'pacientes'], ['Créditos', 'moedas'], ['Indique', 'presente']];
+    return {
+      ic,
+      isDio: scr === 'home' || scr === 'wizard', isHome: scr === 'home', isWizard: scr === 'wizard', isExam: scr === 'exam', isPresent: scr === 'present',
+      dioNav: dioNavDefs.map(([title, i], k) => ({ title, icon: ic[i], bg: k === 0 && scr === 'home' ? '#2c3034' : 'transparent', onClick: k === 0 ? () => set({ screen: 'home' }) : () => {} })),
+      goHome: () => set({ screen: 'home' }),
+      goWizard: () => { clearInterval(this.timer); set({ screen: 'wizard', patient: false, cbct: false, file: false, alignMode: 'review', align: { h: 0, v: 0, r: 0 }, alignSaved: { h: 0, v: 0, r: 0 }, applied: false, processing: false, progress: 0 }); },
+      wizRef: this.wizRef,
+      c1: circ(1), c2: circ(2), c3: circ(3), c4: circ(4), c5: circ(5),
+      noPatient: !s.patient, patient: s.patient, pickPatient: () => set({ patient: true }), swapPatient: () => set({ patient: false, cbct: false, file: false, processing: false, progress: 0 }),
+      s2sub: s.patient ? 'Escolha o tipo de exame que será enviado.' : 'Selecione o paciente para continuar.', examTypes,
+      cbct: s.cbct, s3title: s.cbct ? 'Upload do exame DICOM' : 'Upload de imagens', s3sub: s.cbct ? 'Selecione o arquivo DICOM do exame tomográfico.' : 'Selecione o tipo de exame para liberar o upload.',
+      uploadLocked: !s.cbct, uploadOpen: s.cbct && !s.file, file: s.file, doUpload: () => set({ file: true }), removeFile: () => set({ file: false, processing: false, progress: 0 }),
+      alignLocked: !s.file, alignVisible: s.file, alignReview: s.file && s.alignMode === 'review', alignEdit: s.file && s.alignMode === 'edit',
+      alignTitle: s.applied ? 'Ajuste aplicado' : 'Alinhamento sugerido pela DIO',
+      openAdjust: () => set({ alignMode: 'edit', alignSaved: { ...s.align } }),
+      cancelAdjust: () => set({ alignMode: 'review', align: { ...s.alignSaved } }),
+      applyAdjust: () => set({ alignMode: 'review', applied: s.align.h !== 0 || s.align.v !== 0 || s.align.r !== 0 }),
+      resetAdjust: () => set({ align: { h: 0, v: 0, r: 0 } }),
+      alignSliders,
+      alignViews: [{ label: 'Axial', src: 'assets/alinhamento/01_axial.jpg', rot: rot(a.r) }, { label: 'Coronal', src: 'assets/alinhamento/02_coronal.jpg', rot: rot(a.h) }, { label: 'Sagital', src: 'assets/alinhamento/03_sagital.jpg', rot: rot(a.v) }],
+      backUpload: () => set({ file: false }),
+      confirmAlign: () => {
+        if (s.processing) return;
+        set({ processing: true, progress: 0 });
+        clearInterval(this.timer);
+        this.timer = setInterval(() => { this.setState(st => { const p = Math.min(100, st.progress + 3); if (p >= 100) clearInterval(this.timer); return { progress: p }; }); }, 70);
+      },
+      procIdle: !s.processing, procShown: s.processing, progress: s.progress, procItems, procDone: s.progress >= 100,
+      openExam: () => set({ screen: 'exam', top: 'analise', anaView: 'resumo' }),
+      // exam
+      topAStyle: seg(s.top === 'analise'), topEStyle: seg(s.top === 'explorar'),
+      setTopA: () => set({ top: 'analise', imgPop: false }), setTopE: () => set({ top: 'explorar', imgPop: false }),
+      openPresent: () => set({ screen: 'present' }), closePresent: () => set({ screen: 'exam', exported: false }),
+      anaResumo: s.top === 'analise' && s.anaView === 'resumo', anaEvid: s.top === 'analise' && s.anaView === 'evidencia', isExplorar: s.top === 'explorar',
+      anaPano: s.anaViewer === 'pano', ana3d: s.anaViewer === '3d', setAnaPano: () => set({ anaViewer: 'pano' }), setAna3d: () => set({ anaViewer: '3d' }),
+      anaPanoStyle: segN(s.anaViewer === 'pano'), ana3dStyle: segN(s.anaViewer === '3d'),
+      band, panoLines, tooth: s.tooth, teethUp: up.map(tooth), teethLo: lo.map(tooth), thumbs5, tbAnalise,
+      openEvid: () => set({ anaView: 'evidencia' }), backResumo: () => set({ anaView: 'resumo', imgPop: false }),
+      openMpr: () => set({ top: 'explorar', mode: 'mpr' }), open3d: () => set({ top: 'explorar', mode: '3d' }), open3dExp: () => set({ mode: '3d' }),
+      backAnalise: () => set({ top: 'analise', anaView: 'evidencia' }),
+      cutSrc: cutSrc(s.cut), cutN: s.cut + 1, prevCut, nextCut, series, selLine: lineAt(s.cut).toFixed(2),
+      measure: s.measure, noMeasure: !s.measure, toggleMeasure, imgPop: s.imgPop, imgSliders, imgFilter, resetImg: () => set({ bri: 50, con: 50 }), tbEvid,
+      modes, tbExp, isMpr: s.mode === 'mpr', isPara: s.mode === 'para', is3d: s.mode === '3d', isPlan: s.mode === 'plan',
+      expStatus: s.mode === 'mpr' ? (s.mprLayout === '2x2' ? 'Axial ativo' : single[1].charAt(0) + single[1].slice(1).toLowerCase() + ' ampliado') : s.mode === 'para' ? 'Corte ' + (s.cut + 1) + ' de 12' : s.mode === '3d' ? 'Rotação 0° · zoom 100%' : (s.implant ? '1 implante' : '0 implantes'),
+      panelTitle: { mpr: 'MPR', para: 'Parassagital', '3d': 'Estruturas', plan: 'Planejamento' }[s.mode],
+      mpr2x2: s.mprLayout === '2x2', mprSingle: s.mprLayout !== '2x2', mprSingleSrc: single[2], mprSingleLabel: single[1], mprSingleColor: single[3], setLayout2x2: () => set({ mprLayout: '2x2' }),
+      mprViews, layoutOpts, toggleSync: () => set({ sync: !s.sync }), syncBg: s.sync ? '#3d8ff0' : '#3a3f44', syncX: s.sync ? 14 : 2,
+      posRows: planes.map(p => ({ label: p[1].charAt(0) + p[1].slice(1).toLowerCase(), color: p[3] })),
+      showImgSection: s.mode === 'mpr' || s.mode === 'para',
+      arcoOverlay, toggleParams: () => set({ paramsOpen: !s.paramsOpen }), paramsOpen: s.paramsOpen, paramsRot: s.paramsOpen ? 'rotate(180deg)' : 'none',
+      img3d, presets, miniMpr, structs, resetStructs: () => this.resetStructs(),
+      implant: s.implant, noImplant: !s.implant, impD: s.impD, impL: s.impL, impAng: s.impAng, dOpts, lOpts,
+      impW: Math.round(dn * 6), impH: Math.round(ln * 6), impWs: Math.round(dn * 4), impHs: Math.round(ln * 4.5),
+      angSlider: [this.slider('Angulação', s.impAng, -25, 25, v => v + '°', v => set({ impAng: v }))],
+      volSlider: [this.slider('Opacidade do volume', s.volOp, 20, 100, v => v + '%', v => set({ volOp: v }))], volOpacity: (s.volOp / 100).toFixed(2),
+      removeImplant: () => set({ implant: false }), toggleCanal: () => set({ canalHi: !s.canalHi }), canalBg: s.canalHi ? '#3d8ff0' : 'transparent', canalCheck: s.canalHi ? ic.check : null,
+      planViews,
+      comps, p3d: s.pComp === '3d', p3dev: s.pComp === '3dev', pPano: s.pComp === 'pano', pImg3d, stageBg: s.pComp === 'pano' ? '#000' : '#0b1526',
+      stageCursor: s.pTool === 'selecionar' ? 'default' : 'crosshair', onStage, marksOverlay, pTools, hiChips, markList, noMarks: !s.marks.length,
+      exportImg: () => { set({ exported: true }); setTimeout(() => this.setState({ exported: false }), 1600); }, exportLabel: s.exported ? 'Imagem exportada' : 'Exportar imagem'
+    };
+  }
+  resetStructs() { this.setState({ preset: 'translucida', vis: { maxila: true, mandibula: true, dsup: true, dinf: true, canal: true }, op: { maxila: 30, mandibula: 40, dsup: 100, dinf: 100, canal: 100 } }); }
+  isolar(k) {
+    const vis = { maxila: false, mandibula: false, dsup: false, dinf: false, canal: false, [k]: true };
+    if (k === 'canal' || k === 'mandibula') { vis.canal = true; vis.mandibula = true; vis.dinf = true; vis.dsup = true; }
+    this.setState({ vis, preset: k === 'canal' ? 'canal' : '', sel3d: k, op: { ...this.state.op, mandibula: Math.min(this.state.op.mandibula, 40) } });
+  }
+  renderVals() { const b = this.baseVals(); return { ...b, ...this.extraVals(b) }; }
+  drag(e, fn) {
+    const r = e.currentTarget.getBoundingClientRect();
+    const mv = ev => fn(Math.max(0, Math.min(100, (ev.clientX - r.left) / r.width * 100)), Math.max(0, Math.min(100, (ev.clientY - r.top) / r.height * 100)));
+    const up = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); };
+    mv(e); window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up); e.preventDefault();
+  }
+  resetMpr() { this.setState({ pos: { x: 66, y: 38, z: 48 }, vp: {}, bri: 50, con: 50, mprLayout: '2x2', measure: false }); }
+  extraVals(b) {
+    const s = this.state, ic = this.icons(), set = o => this.setState(o);
+    const setCut = k => set({ cut: Math.max(0, Math.min(11, k)), measure: false });
+    const cutSrc = k => 'assets/clean/corte_' + String(k).padStart(2, '0') + '.png';
+    const series = b.series.map((c, k) => ({ ...c, onClick: () => setCut(k) }));
+    const thumbs5 = [4, 5, 6, 7, 8].map(k => ({ src: cutSrc(k), onClick: () => set({ cut: k, measure: false, anaView: 'evidencia' }), style: k === s.cut ? 'outline:2px solid #3d8ff0;outline-offset:-2px;' : '' }));
+    const tooth = n => ({ n, onClick: () => {}, style: n === '26' ? 'background:#2f3b49;border:1px solid #3d8ff0;color:#ebecee;' : 'background:#1e2023;border:1px solid transparent;color:#5b6168;cursor:default;' });
+    const up = ['18','17','16','15','14','13','12','11','21','22','23','24','25','26','27','28'], lo = ['48','47','46','45','44','43','42','41','31','32','33','34','35','36','37','38'];
+    // MPR
+    const P = s.pos, cl = v => Math.max(0, Math.min(100, v));
+    const C = { axial: ['AXIAL', 'assets/clean/mpr_axial.png', '#e5484d'], coronal: ['CORONAL', 'assets/clean/mpr_coronal.png', '#3fb950'], sagital: ['SAGITAL', 'assets/clean/mpr_sagital.png', '#e3b341'] };
+    const axes = { axial: ['x', 'y', '#e3b341', '#3fb950'], coronal: ['x', 'z', '#e3b341', '#e5484d'], sagital: ['y', 'z', '#3fb950', '#e5484d'], ref: ['x', 'z', '#e3b341', '#e5484d'] };
+    const local = k => (!s.sync && s.vp[k]) ? s.vp[k] : { a: P[axes[k][0]], b: P[axes[k][1]] };
+    const pane = k => {
+      const [ax, bx, vc, hc] = axes[k], L = local(k), isRef = k === 'ref';
+      const single = s.mprLayout !== '2x2';
+      return {
+        label: isRef ? 'REFERÊNCIA 3D' : C[k][0], color: isRef ? '#7fb3f5' : C[k][2], src: isRef ? 'assets/3d/05_modelo_base.jpg' : C[k][1], bg: isRef ? '#0b1526' : '#000',
+        ar: isRef ? '960/680' : '640/285', filter: isRef ? 'none' : b.imgFilter, cursor: isRef ? 'default' : 'crosshair',
+        vx: L.a.toFixed(1), hy: L.b.toFixed(1), vc: vc, hc: hc,
+        outline: k === 'axial' && !single ? 'outline:1px solid rgba(229,72,77,0.6);outline-offset:-1px;' : '',
+        maxIcon: single ? ic.grid4 : ic.maximizar, maxTitle: single ? 'Voltar para 2×2' : 'Maximizar plano',
+        onMax: isRef ? () => set({ mode: '3d' }) : () => set({ mprLayout: single ? '2x2' : k }),
+        onDown: isRef ? () => {} : e => this.drag(e, (u, v) => this.setState(st => st.sync ? { pos: { ...st.pos, [ax]: u, [bx]: v } } : { vp: { ...st.vp, [k]: { a: u, b: v } } }))
+      };
+    };
+    const single = s.mprLayout !== '2x2';
+    const mprPanes = single ? [pane(s.mprLayout)] : ['axial', 'coronal', 'sagital', 'ref'].map(pane);
+    mprPanes.forEach(p => { if (p.label === 'REFERÊNCIA 3D') { p.maxIcon = ic.cubo; p.maxTitle = 'Abrir Visão 3D'; } });
+    const nudge = (ax, d) => () => this.setState(st => ({ pos: { ...st.pos, [ax]: cl(st.pos[ax] + d) }, vp: {} }));
+    const posRows = [['Axial', '#e5484d', 'z'], ['Coronal', '#3fb950', 'y'], ['Sagital', '#e3b341', 'x']].map(([label, color, ax]) => ({ label, color, onMinus: nudge(ax, -4), onPlus: nudge(ax, 4) }));
+    // 3D
+    const F = { translucida: ['assets/3d/05_modelo_base.jpg', 'assets/3d/04_segmentacao_reduzida.jpg'], opaca: ['assets/3d/02_segmentacao_frontal.jpg', 'assets/3d/03_segmentacao_rotacionada.jpg'], canal: ['assets/3d/01_segmentacao_completa.jpg', 'assets/3d/01_segmentacao_completa.jpg'] };
+    const fk = !s.vis.maxila ? 'canal' : (s.op.maxila >= 90 && s.op.mandibula >= 90) ? 'opaca' : 'translucida';
+    const t = Math.min(1, Math.abs(s.ang) / 30), tf = 'perspective(1600px) rotateY(' + (s.ang * 0.55).toFixed(1) + 'deg) scale(0.92)';
+    const frames3d = [{ src: F[fk][0], op: (1 - t * 0.85).toFixed(2), tf }, { src: F[fk][1], op: (t * 0.85).toFixed(2), tf }];
+    const on3dDown = e => { const x0 = e.clientX, a0 = this.state.ang; const mv = ev => this.setState({ ang: Math.max(-30, Math.min(30, Math.round(a0 + (ev.clientX - x0) * 0.12))) }); const upf = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', upf); }; window.addEventListener('mousemove', mv); window.addEventListener('mouseup', upf); e.preventDefault(); };
+    const segN = on => on ? 'background:#2c3034;color:#ebecee;' : 'color:#9ba1a8;';
+    const viewChips = [['Frente', 0], ['Oblíqua', 24]].map(([label, a]) => ({ label, onClick: () => set({ ang: a }), style: segN(s.ang === a) }));
+    const miniMpr = ['axial', 'coronal', 'sagital'].map(k => ({ label: C[k][0], src: C[k][1], color: C[k][2] }));
+    // Plan geometry (cut 280x462)
+    const dn = parseFloat(s.impD.replace(',', '.')), ln = parseFloat(s.impL.replace(',', '.'));
+    const w = dn * 7, len = ln * 7, crest = 206, cx = 144;
+    const pl = { left: ((cx - w / 2) / 280 * 100).toFixed(2), top: ((crest - len) / 462 * 100).toFixed(2), w: (w / 280 * 100).toFixed(2), h: (len / 462 * 100).toFixed(2),
+      lineX: (cx / 280 * 100).toFixed(2), sinusY: (64 / 462 * 100).toFixed(2), gapH: Math.max(0, (crest - len - 64) / 462 * 100).toFixed(2), axD: Math.round(dn * 5), coW: Math.round(dn * 4), coH: (ln * 3.6).toFixed(1), refH: Math.round(ln * 3) };
+    // Present
+    const hiDefs = [['canal', 'Canal', '#e5484d'], ['dentes', 'Dentes', '#eceae6'], ['mandibula', 'Mandíbula', '#a78fd6'], ['maxila', 'Maxila', '#bdbd62']];
+    const hiChips = hiDefs.map(([k, label, color]) => ({ label, color, onClick: () => set({ pHi: { [k]: !s.pHi[k] } }), style: s.pHi[k] ? 'background:rgba(61,143,240,0.22);color:#ebecee;' : 'color:#b4bac2;' }));
+    const ph = s.pHi;
+    const pImg3d = ph.canal || ph.mandibula ? 'assets/3d/01_segmentacao_completa.jpg' : ph.maxila ? 'assets/3d/04_segmentacao_reduzida.jpg' : ph.dentes ? 'assets/3d/05_modelo_base.jpg' : 'assets/3d/02_segmentacao_frontal.jpg';
+    return {
+      series, thumbs5, teethUp: up.map(tooth), teethLo: lo.map(tooth), tooth: '26',
+      prevCut: () => setCut(s.cut - 1), nextCut: () => setCut(s.cut + 1),
+      mprPanes, mprCols: single ? '1fr' : '1fr 1fr', mprRows: single ? '1fr' : '1fr 1fr', posRows,
+      centerPos: () => set({ pos: { x: 50, y: 50, z: 50 }, vp: {} }),
+      toggleSync: () => set({ sync: !s.sync, vp: {} }),
+      expStatus: s.mode === 'mpr' ? 'x ' + Math.round(P.x) + ' · y ' + Math.round(P.y) + ' · z ' + Math.round(P.z) + (s.sync ? '' : ' · planos independentes') : s.mode === '3d' ? 'Rotação ' + s.ang + '° · zoom 100%' : b.expStatus,
+      frames3d, on3dDown, viewChips, miniMpr, stop: e => e.stopPropagation(),
+      planesOpen: s.planesOpen, togglePlanes: () => set({ planesOpen: !s.planesOpen }), planesLabel: s.planesOpen ? 'Ocultar planos' : 'Mostrar planos',
+      pl, addImplant: () => set({ implant: true }),
+      ev: { x: Math.round(s.pos.x), y: Math.round(s.pos.y), z: Math.round(s.pos.z) }, hiChips, pImg3d, stageBg: s.pComp === 'pano' ? '#05070a' : '#0b1526'
+    };
+  }
+
+}
+</script>
+</body>
+</html>
