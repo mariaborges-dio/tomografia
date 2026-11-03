@@ -132,25 +132,27 @@ a:hover{color:#a9cbf8;}
         <div style="display:flex;flex-direction:column;align-items:center;margin-top:24px;"><div style="{{ c4.style }}">{{ c4.content }}</div><span style="flex:1;width:2px;background:#33373b;margin:8px 0;"></span></div>
         <div style="{{ c4.card }}margin-top:24px;">
           <div style="font-size:22px;font-weight:500;">Revisar alinhamento</div>
+          <sc-if value="{{ alignVisible }}" hint-placeholder-val="{{ false }}"><div style="font-size:15px;color:#b4bac2;margin-top:6px;">Confira a orientação do volume antes de gerar os cortes.</div></sc-if>
           <sc-if value="{{ alignLocked }}" hint-placeholder-val="{{ true }}"><div style="font-size:15px;color:#b4bac2;margin-top:6px;">Disponível após o upload.</div></sc-if>
           <sc-if value="{{ alignVisible }}" hint-placeholder-val="{{ false }}">
             <sc-if value="{{ alignReview }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-top:18px;">
-                <div style="display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;"><span style="width:22px;height:22px;border-radius:50%;background:#3d8ff0;color:#fff;display:flex;align-items:center;justify-content:center;transform:scale(0.9);">{{ ic.check }}</span>{{ alignTitle }}</div>
-                <div onClick="{{ openAdjust }}" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border:1px solid #4a5056;border-radius:8px;font-size:14px;cursor:pointer;" style-hover="background:#2c3034;"><span style="display:flex;">{{ ic.ajustes }}</span>Ajustar</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#c6cacf;"><span style="width:8px;height:8px;border-radius:50%;background:{{ alignDot }};"></span>{{ alignTitle }}</div>
+                <span style="font-size:13px;color:#8c939a;font-variant-numeric:tabular-nums;">{{ alignSummary }}</span>
               </div>
             </sc-if>
             <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:16px;font-weight:500;color:#7fb3f5;"><span style="display:flex;">{{ ic.ajustes }}</span>Ajuste da orientação</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:18px;font-size:16px;font-weight:500;color:#7fb3f5;"><span style="display:flex;">{{ ic.ajustes }}</span>Corrigir plano</div>
             </sc-if>
             <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;">
               <sc-for list="{{ alignViews }}" as="v" hint-placeholder-count="3">
                 <div style="display:flex;flex-direction:column;gap:10px;">
                   <div style="position:relative;aspect-ratio:480/393;background:#000;border-radius:6px;overflow:hidden;">
-                    <img src="{{ v.src }}" alt="{{ v.label }}" style="width:100%;height:100%;display:block;object-fit:cover;transform:{{ v.rot }};transition:transform 0.3s;">
-                    <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(61,143,240,0.8);"></span><span style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(61,143,240,0.8);"></span></sc-if>
+                    <img src="{{ v.src }}" alt="{{ v.label }}" style="width:100%;height:100%;display:block;object-fit:cover;transform:{{ v.rot }};transition:{{ v.tr }};">
+                    <span style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:{{ v.line }};"></span><span style="position:absolute;top:50%;left:0;right:0;height:1px;background:{{ v.line }};"></span>
+                    <span style="position:absolute;left:12px;top:10px;font-size:12px;letter-spacing:0.08em;color:#c6cacf;">{{ v.label }}</span>
+                    <sc-if value="{{ alignEdit }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:12px;bottom:10px;font-size:12px;color:#7fb3f5;font-variant-numeric:tabular-nums;">{{ v.angle }}</span></sc-if>
                   </div>
-                  <span style="font-size:14px;color:#b4bac2;">{{ v.label }}</span>
                 </div>
               </sc-for>
             </div>
@@ -160,23 +162,26 @@ a:hover{color:#a9cbf8;}
                   <sc-for list="{{ alignSliders }}" as="s" hint-placeholder-count="3">
                     <div style="display:flex;flex-direction:column;gap:12px;">
                       <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:#c6cacf;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div>
-                      <div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div>
+                      <div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div>
                     </div>
                   </sc-for>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:space-between;">
-                  <div onClick="{{ resetAdjust }}" style="display:flex;align-items:center;gap:8px;color:#7fb3f5;font-size:14px;cursor:pointer;"><span style="display:flex;">{{ ic.reset }}</span>Redefinir para o alinhamento sugerido</div>
+                  <div onClick="{{ resetAdjust }}" style="display:flex;align-items:center;gap:8px;color:#7fb3f5;font-size:14px;cursor:pointer;"><span style="display:flex;">{{ ic.reset }}</span>Redefinir</div>
                   <div style="display:flex;gap:10px;">
-                    <div onClick="{{ cancelAdjust }}" style="padding:10px 20px;background:#3a3f44;border-radius:8px;font-size:14px;cursor:pointer;">Cancelar</div>
-                    <div onClick="{{ applyAdjust }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.check }}Aplicar ajuste</div>
+                    <div onClick="{{ cancelAdjust }}" style="display:flex;align-items:center;height:40px;padding:0 20px;white-space:nowrap;background:#3a3f44;border-radius:8px;font-size:14px;cursor:pointer;">Cancelar</div>
+                    <div onClick="{{ applyAdjust }}" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 20px;white-space:nowrap;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.check }}Aplicar ajuste</div>
                   </div>
                 </div>
               </div>
             </sc-if>
             <sc-if value="{{ alignReview }}" hint-placeholder-val="{{ true }}">
-              <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:24px;">
-                <div onClick="{{ backUpload }}" style="display:flex;align-items:center;gap:8px;padding:12px 24px;background:#3a3f44;border-radius:8px;font-size:15px;cursor:pointer;">{{ ic.esq }}Voltar</div>
-                <div onClick="{{ confirmAlign }}" style="display:flex;align-items:center;gap:10px;padding:12px 26px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Confirmar alinhamento e processar{{ ic.check }}</div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;">
+                <div onClick="{{ backUpload }}" style="display:flex;align-items:center;gap:6px;color:#8c939a;font-size:14px;cursor:pointer;" style-hover="color:#c6cacf;">{{ ic.esq }}Voltar</div>
+                <div style="display:flex;gap:12px;">
+                  <div onClick="{{ openAdjust }}" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 22px;white-space:nowrap;background:#3a3f44;border-radius:8px;font-size:15px;cursor:pointer;" style-hover="background:#444a50;"><span style="display:flex;">{{ ic.ajustes }}</span>Corrigir plano</div>
+                  <div onClick="{{ confirmAlign }}" style="display:flex;align-items:center;gap:10px;height:44px;padding:0 24px;white-space:nowrap;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Confirmar e processar</div>
+                </div>
               </div>
             </sc-if>
           </sc-if>
@@ -197,7 +202,7 @@ a:hover{color:#a9cbf8;}
               </sc-for>
             </div>
             <sc-if value="{{ procDone }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;justify-content:flex-end;margin-top:20px;"><div onClick="{{ openExam }}" style="padding:12px 28px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Abrir análise</div></div>
+              <div style="display:flex;justify-content:flex-end;margin-top:20px;"><div onClick="{{ openExam }}" style="display:flex;align-items:center;height:44px;padding:0 24px;white-space:nowrap;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;">Abrir análise</div></div>
             </sc-if>
           </sc-if>
         </div>
@@ -213,13 +218,13 @@ a:hover{color:#a9cbf8;}
       <div style="display:flex;flex-direction:column;gap:1px;"><span style="font-size:17px;font-weight:500;">Ana Souza</span><span style="font-size:13px;color:#8c939a;">Tomografia · 28/10/2026</span></div>
     </div>
     <div style="display:flex;gap:2px;padding:3px;background:#232629;border-radius:9px;">
-      <div onClick="{{ setTopA }}" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:7px;font-size:15px;cursor:pointer;{{ topAStyle }}"><span style="display:flex;">{{ ic.analise }}</span>Análise</div>
-      <div onClick="{{ setTopE }}" style="display:flex;align-items:center;gap:8px;padding:8px 20px;border-radius:7px;font-size:15px;cursor:pointer;{{ topEStyle }}"><span style="display:flex;">{{ ic.camadas }}</span>Explorar exame</div>
+      <div onClick="{{ setTopA }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 18px;border-radius:7px;font-size:14px;white-space:nowrap;cursor:pointer;{{ topAStyle }}"><span style="display:flex;">{{ ic.analise }}</span>Análise</div>
+      <div onClick="{{ setTopE }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 18px;border-radius:7px;font-size:14px;white-space:nowrap;cursor:pointer;{{ topEStyle }}"><span style="display:flex;">{{ ic.camadas }}</span>Explorar exame</div>
     </div>
     <div style="display:flex;justify-content:flex-end;align-items:center;gap:14px;">
-      <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:#8c939a;">{{ ic.check }}Salvo</span>
+      <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:#7d848b;white-space:nowrap;">{{ ic.check }}Salvo</span>
       <div title="Mais opções" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#c6cacf;">{{ ic.maisH }}</div>
-      <div onClick="{{ openPresent }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;"><span style="display:flex;">{{ ic.apresentar }}</span>Apresentar ao paciente</div>
+      <div onClick="{{ openPresent }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;white-space:nowrap;background:#2c3034;color:#ebecee;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;" style-hover="background:#353a3f;"><span style="display:flex;">{{ ic.apresentar }}</span>Apresentar ao paciente</div>
     </div>
   </div>
 
@@ -235,20 +240,9 @@ a:hover{color:#a9cbf8;}
               <span style="position:absolute;left:{{ band.left }}%;top:{{ band.labelTop }}%;margin:6px;padding:2px 8px;background:#3d8ff0;color:#fff;font-size:13px;font-weight:500;border-radius:3px;">{{ tooth }}</span>
             </div>
           </sc-if>
-          <sc-if value="{{ ana3d }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;inset:0;background:#0b1526;"><img src="assets/3d/05_modelo_base.jpg" alt="3D" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
-          </sc-if>
-          <div style="position:absolute;left:12px;top:12px;display:flex;gap:2px;padding:3px;background:rgba(26,28,30,0.92);border-radius:8px;font-size:13px;">
-            <div onClick="{{ setAnaPano }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;cursor:pointer;{{ anaPanoStyle }}">{{ ic.panoramica }}Panorâmica</div>
-            <div onClick="{{ setAna3d }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;cursor:pointer;{{ ana3dStyle }}">{{ ic.cubo }}3D</div>
+          <span style="position:absolute;left:14px;top:12px;font-size:12px;font-weight:600;letter-spacing:0.06em;color:#c6cacf;">PANORÂMICA RECONSTRUÍDA</span>
+          
           </div>
-          <div style="position:absolute;left:12px;bottom:12px;display:flex;gap:2px;padding:3px;background:rgba(26,28,30,0.92);border-radius:8px;">
-            <sc-for list="{{ tbAnalise }}" as="t" hint-placeholder-count="5">
-              <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:18px;background:#3a3f44;margin:8px 4px;"></span></sc-if>
-              <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};">{{ t.icon }}</div></sc-if>
-            </sc-for>
-          </div>
-        </div>
         <div style="flex-shrink:0;display:flex;flex-direction:column;gap:6px;">
           <div style="display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;">
             <sc-for list="{{ teethUp }}" as="d" hint-placeholder-count="16"><div onClick="{{ d.onClick }}" style="position:relative;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;font-variant-numeric:tabular-nums;cursor:pointer;{{ d.style }}">{{ d.n }}</div></sc-for>
@@ -259,26 +253,32 @@ a:hover{color:#a9cbf8;}
           <span style="font-size:12px;color:#7d848b;">Dentes · FDI</span>
         </div>
       </div>
-      <div style="width:380px;flex-shrink:0;background:#1c1e20;border-radius:8px;padding:24px;display:flex;flex-direction:column;gap:24px;overflow:auto;">
-        <div style="display:flex;flex-direction:column;gap:4px;"><span style="font-size:13px;color:#8c939a;">Região em foco</span><span style="font-size:30px;font-weight:500;">Região {{ tooth }}</span></div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Cortes parassagitais</span><span style="color:#8c939a;">12</span></div>
-          <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;">
-            <sc-for list="{{ thumbs5 }}" as="c" hint-placeholder-count="5"><div onClick="{{ c.onClick }}" style="aspect-ratio:280/462;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;display:block;"></div></sc-for>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div onClick="{{ openMpr }}" style="position:relative;aspect-ratio:16/10;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;"><img src="assets/mpr/01_axial.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"><span style="position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:500;">MPR</span></div>
-          <div onClick="{{ openEvid }}" style="position:relative;aspect-ratio:16/10;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;"><img src="assets/clean/pano.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{ band.objPos }};display:block;"><span style="position:absolute;left:8px;bottom:6px;font-size:12px;font-weight:500;">Panorâmica</span></div>
-        </div>
-        <div onClick="{{ open3d }}" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #2a2e32;border-bottom:1px solid #2a2e32;cursor:pointer;">
-          <span style="display:flex;color:#c6cacf;">{{ ic.cubo }}</span>
-          <span style="flex:1;font-size:14px;">Estruturas segmentadas</span>
-          <span style="display:flex;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:#bdbd62;"></span><span style="width:8px;height:8px;border-radius:50%;background:#a78fd6;"></span><span style="width:8px;height:8px;border-radius:50%;background:#e09a5c;"></span><span style="width:8px;height:8px;border-radius:50%;background:#eceae6;"></span><span style="width:8px;height:8px;border-radius:50%;background:#e5484d;"></span></span>
-          <span style="display:flex;color:#8c939a;">{{ ic.dir }}</span>
+      <div style="width:360px;flex-shrink:0;background:#1c1e20;border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:22px;overflow:auto;">
+        <div style="display:flex;flex-direction:column;gap:6px;"><span style="font-size:28px;font-weight:500;line-height:1.1;white-space:nowrap;">Dente {{ tooth }}</span><span style="font-size:13px;color:#8c939a;white-space:nowrap;">Região {{ tooth }} · 12 cortes preparados</span></div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#8c939a;padding-bottom:6px;"><span>{{ findingsCount }} achados</span><span onMouseEnter="{{ tipDemo }}" onMouseLeave="{{ tipOff }}" style="display:flex;color:#5f666d;cursor:help;">{{ ic.info }}</span></div>
+          <sc-for list="{{ findings }}" as="a" hint-placeholder-count="3">
+            <div onClick="{{ a.onClick }}" style="display:flex;flex-direction:column;gap:12px;padding:10px 12px;margin:0 -12px;border-radius:6px;cursor:pointer;background:{{ a.bg }};" style-hover="background:rgba(255,255,255,0.035);">
+              <div style="display:flex;align-items:center;gap:10px;"><span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ a.dot }};"></span><span style="flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ a.label }}</span><span style="font-size:13px;color:#7d848b;font-variant-numeric:tabular-nums;white-space:nowrap;">Corte {{ a.n }}</span></div>
+              <sc-if value="{{ a.sel }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:12px;align-items:flex-start;padding-left:18px;">
+                  <div style="position:relative;width:64px;flex-shrink:0;aspect-ratio:280/462;background:#000;border-radius:4px;overflow:hidden;"><img src="{{ a.src }}" alt="" style="width:100%;height:100%;display:block;"><span style="position:absolute;left:{{ a.box.l }}%;top:{{ a.box.t }}%;width:{{ a.box.w }}%;height:{{ a.box.h }}%;border:1.5px dashed #f2b84b;border-radius:3px;"></span></div>
+                  <div style="display:flex;flex-direction:column;gap:10px;min-width:0;"><span style="font-size:13px;color:#b4bac2;line-height:1.45;text-wrap:pretty;">{{ a.desc }}</span><span onClick="{{ a.open }}" style="display:flex;align-items:center;gap:2px;font-size:13px;font-weight:500;color:#7fb3f5;cursor:pointer;white-space:nowrap;" style-hover="color:#a9cbf8;">Abrir corte {{ a.n }}{{ ic.dir }}</span></div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
         </div>
         <div style="flex:1;"></div>
-        <div onClick="{{ openEvid }}" style="padding:14px 0;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;text-align:center;cursor:pointer;">Ver cortes</div>
+        <div onClick="{{ open3d }}" style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <div style="width:64px;height:40px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#0b1526;"><img src="assets/3d/05_modelo_base.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"></div>
+          <span style="flex:1;font-size:14px;color:#c6cacf;white-space:nowrap;">Visão 3D</span>
+          <span style="display:flex;color:#8c939a;">{{ ic.dir }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div onClick="{{ openEvid }}" style="height:44px;display:flex;align-items:center;justify-content:center;background:#3d8ff0;color:#fff;border-radius:8px;font-size:15px;font-weight:500;white-space:nowrap;cursor:pointer;" style-hover="background:#4a98f2;">Ver cortes</div>
+          <div onClick="{{ openMpr }}" style="height:40px;display:flex;align-items:center;justify-content:center;background:#2c3034;color:#ebecee;border-radius:8px;font-size:14px;white-space:nowrap;cursor:pointer;" style-hover="background:#353a3f;">Explorar exame</div>
+        </div>
       </div>
     </div>
   </sc-if>
@@ -287,10 +287,12 @@ a:hover{color:#a9cbf8;}
     <div data-screen-label="Evidência" style="flex:1;display:flex;flex-direction:column;min-height:0;">
       <div style="height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #26292c;background:#18191b;">
         <div style="display:flex;align-items:center;gap:14px;">
-          <div onClick="{{ backResumo }}" style="display:flex;align-items:center;gap:6px;font-size:14px;color:#b4bac2;cursor:pointer;">{{ ic.esq }}Análise</div>
+          <div onClick="{{ backResumo }}" style="display:flex;align-items:center;gap:6px;font-size:14px;color:#b4bac2;white-space:nowrap;cursor:pointer;" style-hover="color:#ebecee;">{{ ic.esq }}Análise</div>
           <span style="width:1px;height:20px;background:#33373b;"></span>
-          <span style="font-size:16px;font-weight:500;">Região {{ tooth }}</span>
-          <span style="font-size:14px;color:#8c939a;">Parassagital</span>
+          <span style="font-size:15px;font-weight:500;white-space:nowrap;">Região {{ tooth }}</span>
+          <span style="font-size:14px;color:#8c939a;white-space:nowrap;">Parassagital</span>
+          <span style="width:1px;height:20px;background:#33373b;"></span>
+          <div onClick="{{ openMpr }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:6px;font-size:13px;color:#c6cacf;background:#232629;white-space:nowrap;cursor:pointer;" style-hover="background:#26292c;"><span style="display:flex;">{{ ic.camadas }}</span>Abrir no MPR</div>
         </div>
         <div style="display:flex;align-items:center;gap:4px;">
           <div title="Corte anterior" onClick="{{ prevCut }}" style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.esq }}</div>
@@ -305,44 +307,45 @@ a:hover{color:#a9cbf8;}
           <sc-if value="{{ imgPop }}" hint-placeholder-val="{{ false }}">
             <div style="position:absolute;right:0;top:44px;width:260px;padding:18px;background:#202326;border:1px solid #33373b;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:16px;z-index:5;">
               <sc-for list="{{ imgSliders }}" as="s" hint-placeholder-count="2">
-                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#b4bac2;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#b4bac2;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
               </sc-for>
               <div onClick="{{ resetImg }}" style="display:flex;align-items:center;gap:6px;font-size:13px;color:#7fb3f5;cursor:pointer;">{{ ic.reset }}Restaurar</div>
             </div>
           </sc-if>
         </div>
       </div>
-      <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,0.78fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:4px;padding:4px;">
+      <div style="flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,0.8fr) minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:4px;padding:4px;">
         <div style="grid-row:span 2;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;outline:1px solid rgba(61,143,240,0.6);outline-offset:-1px;">
           <div style="position:relative;height:100%;max-width:100%;aspect-ratio:280/462;">
             <img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
+            <sc-if value="{{ cutFinding }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:{{ cutBox.l }}%;top:{{ cutBox.t }}%;width:{{ cutBox.w }}%;height:{{ cutBox.h }}%;border:1.5px dashed #f2b84b;border-radius:4px;"></span><span style="position:absolute;left:{{ cutBox.l }}%;top:{{ cutBox.lt }}%;margin-top:6px;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;white-space:nowrap;">{{ cutFindingLabel }}</span></sc-if>
             <sc-if value="{{ measure }}" hint-placeholder-val="{{ false }}">
               <svg viewBox="0 0 280 462" style="position:absolute;inset:0;width:100%;height:100%;">
                 <line x1="144" y1="96" x2="144" y2="206" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="96" x2="151" y2="96" stroke="#f2b84b" stroke-width="1.4"></line><line x1="137" y1="206" x2="151" y2="206" stroke="#f2b84b" stroke-width="1.4"></line>
                 <line x1="88" y1="158" x2="212" y2="158" stroke="#f2b84b" stroke-width="1.4"></line><line x1="88" y1="151" x2="88" y2="165" stroke="#f2b84b" stroke-width="1.4"></line><line x1="212" y1="151" x2="212" y2="165" stroke="#f2b84b" stroke-width="1.4"></line>
               </svg>
-              <span style="position:absolute;left:55%;top:24%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Altura · — mm</span>
-              <span style="position:absolute;left:30%;top:36.5%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Largura · — mm</span>
+              <span style="position:absolute;left:55%;top:24%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Altura</span>
+              <span style="position:absolute;left:30%;top:36.5%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Largura</span>
             </sc-if>
           </div>
-          <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>PARASSAGITAL · CORTE {{ cutN }}</span>
+          <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;white-space:nowrap;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>PARASSAGITAL · CORTE {{ cutN }}</span>
         </div>
-        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_axial.png" alt="Axial" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.y }}%;left:0;right:0;height:1px;background:#3fb950;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#e5484d;"></span>AXIAL</span></div>
-        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_coronal.png" alt="Coronal" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;"></span>CORONAL</span></div>
-        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_sagital.png" alt="Sagital" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.y }}%;top:0;bottom:0;width:1px;background:#3fb950;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;"><span style="width:7px;height:7px;border-radius:50%;background:#e3b341;"></span>SAGITAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_axial.png" alt="Axial" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.y }}%;left:0;right:0;height:1px;background:#3fb950;"></span></div><span style="position:absolute;left:10px;top:8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#9ba1a8;"><span style="width:6px;height:6px;border-radius:50%;background:#e5484d;"></span>AXIAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_coronal.png" alt="Coronal" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.x }}%;top:0;bottom:0;width:1px;background:#e3b341;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:10px;top:8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#9ba1a8;"><span style="width:6px;height:6px;border-radius:50%;background:#3fb950;"></span>CORONAL</span></div>
+        <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_sagital.png" alt="Sagital" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><span style="position:absolute;left:{{ ev.y }}%;top:0;bottom:0;width:1px;background:#3fb950;"></span><span style="position:absolute;top:{{ ev.z }}%;left:0;right:0;height:1px;background:#e5484d;"></span></div><span style="position:absolute;left:10px;top:8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#9ba1a8;"><span style="width:6px;height:6px;border-radius:50%;background:#e3b341;"></span>SAGITAL</span></div>
         <div style="position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-          <div style="display:flex;gap:4px;width:100%;height:100%;align-items:center;padding:28px 6px 6px;">
+          <div style="display:flex;gap:4px;width:100%;height:100%;align-items:center;padding:26px 6px 6px;">
             <div style="position:relative;flex:1;min-width:0;aspect-ratio:500/282;"><img src="assets/clean/pano.png" alt="Panorâmica" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;border:1px dashed rgba(127,179,245,0.8);background:rgba(61,143,240,0.08);"></div><sc-for list="{{ panoLines }}" as="l" hint-placeholder-count="12"><span style="position:absolute;left:{{ l.left }}%;top:{{ band.top }}%;height:{{ band.h }}%;width:{{ l.w }}px;background:{{ l.bg }};"></span></sc-for></div>
             <div style="position:relative;height:100%;aspect-ratio:432/528;flex-shrink:0;"><img src="assets/clean/arco.png" alt="Arco" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">{{ arcoOverlay }}</div>
           </div>
-          <span style="position:absolute;left:12px;top:10px;font-size:13px;font-weight:500;">PANORÂMICA · ARCO · {{ tooth }}</span>
+          <span style="position:absolute;left:10px;top:8px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:0.05em;color:#9ba1a8;white-space:nowrap;">PANORÂMICA · ARCO<span onMouseEnter="{{ tipPos }}" onMouseLeave="{{ tipOff }}" style="display:flex;color:#6d737a;cursor:help;">{{ ic.info }}</span></span>
         </div>
       </div>
-      <div style="height:168px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding:6px 8px 10px;border-top:1px solid #26292c;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:#8c939a;"><span>Série parassagital · Região {{ tooth }}</span><span>Vizinhos do corte {{ cutN }}</span></div>
+      <div style="height:116px;flex-shrink:0;display:flex;flex-direction:column;gap:5px;padding:6px 4px 8px;">
+        <div style="display:flex;justify-content:space-between;padding:0 2px;font-size:11px;color:#7d848b;white-space:nowrap;"><span>Série parassagital · 12 cortes</span><span>Vizinhos em destaque</span></div>
         <div style="flex:1;min-height:0;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;">
           <sc-for list="{{ series }}" as="c" hint-placeholder-count="12">
-            <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:6px;top:4px;font-size:12px;font-weight:500;">{{ c.n }}</span></div>
+            <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:5px;top:3px;font-size:11px;font-weight:500;">{{ c.n }}</span></div>
           </sc-for>
         </div>
       </div>
@@ -353,38 +356,59 @@ a:hover{color:#a9cbf8;}
     <div style="height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid #26292c;">
       <div style="display:flex;gap:4px;">
         <sc-for list="{{ modes }}" as="m" hint-placeholder-count="4">
-          <div onClick="{{ m.onClick }}" style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:7px;font-size:14px;cursor:pointer;{{ m.style }}"><span style="display:flex;">{{ m.icon }}</span>{{ m.label }}</div>
+          <div onClick="{{ m.onClick }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:7px;font-size:14px;white-space:nowrap;cursor:pointer;{{ m.style }}"><span style="display:flex;">{{ m.icon }}</span>{{ m.label }}</div>
         </sc-for>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;padding:6px 8px 6px 14px;border:1px solid #2e3a4a;background:#1a2230;border-radius:8px;font-size:13px;">
-        <span style="color:#b4bac2;">Região {{ tooth }} · Corte {{ cutN }}</span>
-        <div onClick="{{ backAnalise }}" style="padding:4px 10px;color:#7fb3f5;font-weight:500;cursor:pointer;">Voltar à análise</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;">
+        <span style="color:#8c939a;">Região {{ tooth }}</span>
       </div>
     </div>
     <div style="flex:1;display:flex;min-height:0;padding:0 16px 16px;gap:0;">
-      <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#101112;border:1px solid #26292c;border-radius:8px 0 0 8px;overflow:hidden;margin-top:12px;">
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:#101112;border:1px solid #26292c;border-radius:{{ viewRad }};overflow:hidden;margin-top:12px;">
         <div style="height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid #26292c;background:#18191b;">
           <div style="display:flex;align-items:center;gap:2px;">
             <sc-for list="{{ tbExp }}" as="t" hint-placeholder-count="10">
               <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="width:1px;height:20px;background:#33373b;margin:0 6px;"></span></sc-if>
               <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:34px;height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};opacity:{{ t.op }};">{{ t.icon }}</div></sc-if>
-              <sc-if value="{{ t.txt }}" hint-placeholder-val="{{ false }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:6px;font-size:13px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};opacity:{{ t.op }};">{{ t.icon }}{{ t.label }}</div></sc-if>
+              <sc-if value="{{ t.txt }}" hint-placeholder-val="{{ false }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:6px;font-size:13px;white-space:nowrap;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};opacity:{{ t.op }};">{{ t.icon }}{{ t.label }}</div></sc-if>
+              <sc-if value="{{ t.sw }}" hint-placeholder-val="{{ false }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border-radius:6px;font-size:13px;color:#b4bac2;white-space:nowrap;cursor:pointer;" style-hover="background:rgba(255,255,255,0.04);"><span style="width:26px;height:16px;border-radius:8px;background:{{ t.swBg }};position:relative;flex-shrink:0;"><span style="position:absolute;left:{{ t.swX }}px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left 0.15s;"></span></span>{{ t.label }}</div></sc-if>
             </sc-for>
           </div>
-          <span style="font-size:12px;color:#7d848b;">{{ expStatus }}</span>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#7d848b;font-variant-numeric:tabular-nums;white-space:nowrap;"><span>{{ expStatus }}</span><sc-if value="{{ expHasHint }}" hint-placeholder-val="{{ false }}"><span onMouseEnter="{{ tipExp }}" onMouseLeave="{{ tipOff }}" style="display:flex;color:#5f666d;cursor:help;">{{ ic.info }}</span></sc-if></div>
         </div>
         <div style="flex:1;min-height:0;position:relative;">
+          <sc-if value="{{ mprPop }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:10px;top:8px;width:250px;padding:16px;background:#202326;border:1px solid #33373b;border-radius:8px;box-shadow:0 12px 32px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;z-index:5;">
+              <sc-for list="{{ imgSliders }}" as="s" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#b4bac2;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+              </sc-for>
+              <div onClick="{{ resetImg }}" style="display:flex;align-items:center;gap:6px;font-size:13px;color:#7fb3f5;cursor:pointer;">{{ ic.reset }}Restaurar</div>
+            </div>
+          </sc-if>
 
           <sc-if value="{{ isMpr }}" hint-placeholder-val="{{ true }}">
             <div data-screen-label="Explorar MPR" style="position:absolute;inset:0;display:grid;grid-template-columns:{{ mprCols }};grid-template-rows:{{ mprRows }};gap:3px;padding:3px;">
               <sc-for list="{{ mprPanes }}" as="v" hint-placeholder-count="4">
                 <div style="position:relative;background:{{ v.bg }};display:flex;align-items:center;justify-content:center;overflow:hidden;min-height:0;{{ v.outline }}">
-                  <div onMouseDown="{{ v.onDown }}" style="position:relative;width:100%;aspect-ratio:{{ v.ar }};cursor:{{ v.cursor }};user-select:none;">
+                  <div onMouseDown="{{ v.onDown }}" style="position:relative;width:100%;aspect-ratio:{{ v.ar }};cursor:{{ v.cursor }};user-select:none;transform:scale({{ v.zoom }});transition:transform 0.15s;">
                     <img src="{{ v.src }}" alt="{{ v.label }}" draggable="false" style="width:100%;height:100%;display:block;object-fit:cover;filter:{{ v.filter }};pointer-events:none;">
                     <span style="position:absolute;left:{{ v.vx }}%;top:0;bottom:0;width:1px;background:{{ v.vc }};pointer-events:none;"></span>
                     <span style="position:absolute;top:{{ v.hy }}%;left:0;right:0;height:1px;background:{{ v.hc }};pointer-events:none;"></span>
                     <span style="position:absolute;left:{{ v.vx }}%;top:{{ v.hy }}%;width:14px;height:14px;margin:-7px 0 0 -7px;border:1.5px solid #fff;border-radius:50%;pointer-events:none;"></span>
+                    <sc-if value="{{ v.hasLine }}" hint-placeholder-val="{{ false }}">
+                      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"><line x1="{{ v.ml.x1 }}" y1="{{ v.ml.y1 }}" x2="{{ v.ml.x2 }}" y2="{{ v.ml.y2 }}" stroke="#f2b84b" stroke-width="1.5" vector-effect="non-scaling-stroke"></line></svg>
+                      <span style="position:absolute;left:{{ v.ml.x1 }}%;top:{{ v.ml.y1 }}%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#f2b84b;pointer-events:none;"></span>
+                      <span style="position:absolute;left:{{ v.ml.x2 }}%;top:{{ v.ml.y2 }}%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#f2b84b;pointer-events:none;"></span>
+                      <span style="position:absolute;left:{{ v.ml.x2 }}%;top:{{ v.ml.y2 }}%;margin:8px 0 0 8px;padding:2px 7px;background:rgba(0,0,0,0.8);color:#f2b84b;font-size:12px;border-radius:3px;white-space:nowrap;pointer-events:none;">Distância</span>
+                    </sc-if>
                   </div>
+                  <sc-if value="{{ v.hasSlice }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;right:8px;bottom:8px;display:flex;align-items:center;gap:2px;padding:2px;background:rgba(20,22,24,0.88);border-radius:6px;font-size:12px;color:#c6cacf;font-variant-numeric:tabular-nums;">
+                      <div title="Plano anterior" onClick="{{ v.onPrev }}" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.esq }}</div>
+                      <span style="min-width:34px;text-align:center;">{{ v.slice }}</span>
+                      <div title="Próximo plano" onClick="{{ v.onNext }}" style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.dir }}</div>
+                    </div>
+                  </sc-if>
                   <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;pointer-events:none;"><span style="width:7px;height:7px;border-radius:50%;background:{{ v.color }};"></span>{{ v.label }}</span>
                   <div title="{{ v.maxTitle }}" onClick="{{ v.onMax }}" style="position:absolute;right:8px;top:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#c6cacf;cursor:pointer;">{{ v.maxIcon }}</div>
                 </div>
@@ -393,8 +417,8 @@ a:hover{color:#a9cbf8;}
           </sc-if>
 
           <sc-if value="{{ isPara }}" hint-placeholder-val="{{ false }}">
-            <div data-screen-label="Explorar Parassagital" style="position:absolute;inset:0;display:flex;gap:12px;padding:12px;">
-              <div style="width:27%;flex-shrink:0;display:flex;flex-direction:column;gap:10px;min-height:0;">
+            <div data-screen-label="Explorar Parassagital" style="position:absolute;inset:0;display:flex;gap:10px;padding:10px;">
+              <div style="width:23%;flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-height:0;">
                 <div style="position:relative;width:100%;aspect-ratio:500/282;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;"><img src="assets/clean/pano.png" alt="Panorâmica" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><div style="position:absolute;left:{{ band.left }}%;top:{{ band.top }}%;width:{{ band.w }}%;height:{{ band.h }}%;background:rgba(61,143,240,0.12);"></div><sc-for list="{{ panoLines }}" as="l" hint-placeholder-count="12"><span style="position:absolute;left:{{ l.left }}%;top:{{ band.top }}%;height:{{ band.h }}%;width:{{ l.w }}px;background:{{ l.bg }};"></span></sc-for><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">PANORÂMICA</span></div>
                 <div style="position:relative;flex:1;min-height:0;background:#000;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;"><div style="position:relative;height:100%;max-width:100%;aspect-ratio:432/528;"><img src="assets/clean/arco.png" alt="Axial com arco" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">{{ arcoOverlay }}</div><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">AXIAL · ARCO</span></div>
               </div>
@@ -405,7 +429,7 @@ a:hover{color:#a9cbf8;}
                   <span style="position:absolute;left:55%;top:24%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Altura</span>
                   <span style="position:absolute;left:30%;top:36.5%;padding:2px 7px;background:rgba(0,0,0,0.78);color:#f2b84b;font-size:12px;border-radius:3px;">Largura</span>
                 </sc-if>
-                <span style="position:absolute;left:12px;top:10px;font-size:13px;font-weight:600;white-space:nowrap;">Corte {{ cutN }}</span>
+                <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;white-space:nowrap;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>CORTE {{ cutN }}</span>
                 <div style="position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:6px;padding:10px;background:linear-gradient(transparent,rgba(0,0,0,0.7));">
                   <div title="Corte anterior" onClick="{{ prevCut }}" style="width:32px;height:32px;border-radius:6px;background:rgba(40,44,48,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.esq }}</div>
                   <div title="Próximo corte" onClick="{{ nextCut }}" style="width:32px;height:32px;border-radius:6px;background:rgba(40,44,48,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.dir }}</div>
@@ -413,28 +437,36 @@ a:hover{color:#a9cbf8;}
               </div>
               <div style="flex:1;min-width:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:6px;">
                 <sc-for list="{{ series }}" as="c" hint-placeholder-count="12">
-                  <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:6px;top:4px;font-size:12px;font-weight:500;">{{ c.n }}</span></div>
+                  <div onClick="{{ c.onClick }}" style="position:relative;background:#000;border-radius:4px;overflow:hidden;cursor:pointer;{{ c.style }}"><img src="{{ c.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ c.op }};"><span style="position:absolute;left:5px;top:3px;font-size:11px;font-weight:500;">{{ c.n }}</span></div>
                 </sc-for>
               </div>
             </div>
           </sc-if>
 
           <sc-if value="{{ is3d }}" hint-placeholder-val="{{ false }}">
-            <div data-screen-label="Explorar 3D" onMouseDown="{{ on3dDown }}" style="position:absolute;inset:0;background:#0b1526;overflow:hidden;cursor:grab;user-select:none;">
-              <sc-for list="{{ frames3d }}" as="fr" hint-placeholder-count="2"><img src="{{ fr.src }}" alt="" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:{{ fr.op }};transform:{{ fr.tf }};pointer-events:none;"></sc-for>
+            <div data-screen-label="Explorar 3D" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 48%,#0c1522 0%,#0d1116 78%);overflow:hidden;cursor:grab;user-select:none;">
+              <x-import component-from-global-scope="dio-3d" from="./dio-3d.js" view="{{ v3View }}" vis="{{ v3Vis }}" yaw="{{ v3Yaw }}" zoom="{{ v3Zoom }}" interactive="1" style="position:absolute;inset:0;" hint-size="100%,100%"></x-import>
               <div onMouseDown="{{ stop }}" style="position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:8px;">
-                <div style="display:flex;gap:2px;padding:3px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;"><sc-for list="{{ presets }}" as="p" hint-placeholder-count="3"><div onClick="{{ p.onClick }}" style="padding:6px 12px;border-radius:6px;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
-                <div style="display:flex;gap:2px;padding:3px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;"><sc-for list="{{ viewChips }}" as="p" hint-placeholder-count="2"><div onClick="{{ p.onClick }}" style="padding:6px 12px;border-radius:6px;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
+                <div style="display:flex;gap:2px;padding:3px;background:rgba(22,25,28,0.88);border-radius:8px;font-size:13px;"><sc-for list="{{ view3Chips }}" as="p" hint-placeholder-count="2"><div onClick="{{ p.onClick }}" style="display:flex;align-items:center;height:28px;padding:0 12px;border-radius:6px;white-space:nowrap;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
+                <div style="display:flex;gap:2px;padding:3px;background:rgba(22,25,28,0.88);border-radius:8px;font-size:13px;"><sc-for list="{{ viewChips }}" as="p" hint-placeholder-count="2"><div onClick="{{ p.onClick }}" style="display:flex;align-items:center;height:28px;padding:0 12px;border-radius:6px;white-space:nowrap;cursor:pointer;{{ p.style }}">{{ p.label }}</div></sc-for></div>
               </div>
+              <sc-if value="{{ showStructs }}" hint-placeholder-val="{{ true }}">
+                <div onMouseDown="{{ stop }}" style="position:absolute;right:14px;top:14px;width:196px;padding:3px;background:rgba(22,25,28,0.88);border-radius:8px;display:flex;flex-direction:column;gap:0;">
+                  <sc-for list="{{ struct3 }}" as="s" hint-placeholder-count="4">
+                    <div onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:10px;height:30px;padding:0 9px;border-radius:6px;cursor:pointer;font-size:13px;white-space:nowrap;" style-hover="background:rgba(255,255,255,0.06);"><span style="width:9px;height:9px;border-radius:3px;flex-shrink:0;background:{{ s.color }};opacity:{{ s.op }};"></span><span style="flex:1;opacity:{{ s.op }};">{{ s.name }}</span><span style="display:flex;color:{{ s.eyeColor }};">{{ s.eye }}</span></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ empty3 }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#7d848b;pointer-events:none;">Nenhuma estrutura visível</div></sc-if>
               <div onMouseDown="{{ stop }}" style="position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
                 <sc-if value="{{ planesOpen }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;gap:4px;padding:4px;background:rgba(20,24,30,0.92);border-radius:8px;">
+                  <div style="display:flex;gap:4px;padding:4px;background:rgba(22,25,28,0.9);border-radius:8px;">
                     <sc-for list="{{ miniMpr }}" as="v" hint-placeholder-count="3"><div style="position:relative;width:180px;aspect-ratio:640/285;background:#000;border-radius:4px;overflow:hidden;"><img src="{{ v.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"><span style="position:absolute;left:6px;top:4px;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;letter-spacing:0.04em;"><span style="width:6px;height:6px;border-radius:50%;background:{{ v.color }};"></span>{{ v.label }}</span></div></sc-for>
                   </div>
                 </sc-if>
-                <div onClick="{{ togglePlanes }}" style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(20,24,30,0.9);border-radius:8px;font-size:13px;cursor:pointer;color:#c6cacf;">{{ ic.grid4 }}{{ planesLabel }}</div>
+                <div onClick="{{ togglePlanes }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 12px;background:rgba(22,25,28,0.88);border-radius:8px;font-size:13px;white-space:nowrap;cursor:pointer;color:#c6cacf;">{{ ic.grid4 }}{{ planesLabel }}</div>
               </div>
-              <div style="position:absolute;left:14px;bottom:14px;font-size:12px;color:#7d848b;pointer-events:none;">Arraste para girar</div>
+              
             </div>
           </sc-if>
 
@@ -444,7 +476,7 @@ a:hover{color:#a9cbf8;}
                 <img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};">
                 <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}">
                   <span style="position:absolute;left:{{ pl.lineX }}%;top:{{ pl.sinusY }}%;height:{{ pl.gapH }}%;border-left:1.5px dashed #f2b84b;"></span>
-                  <span style="position:absolute;left:{{ pl.lineX }}%;top:{{ pl.sinusY }}%;margin:-10px 0 0 8px;padding:1px 6px;background:rgba(0,0,0,0.75);color:#f2b84b;font-size:11px;border-radius:3px;white-space:nowrap;">Seio maxilar · — mm</span>
+                  <span style="position:absolute;left:{{ pl.lineX }}%;top:{{ pl.sinusY }}%;margin:-10px 0 0 8px;padding:1px 6px;background:rgba(0,0,0,0.75);color:#f2b84b;font-size:11px;border-radius:3px;white-space:nowrap;">Seio maxilar</span>
                   <div style="position:absolute;left:{{ pl.left }}%;top:{{ pl.top }}%;width:{{ pl.w }}%;height:{{ pl.h }}%;border-radius:3px 3px 30% 30%;background:repeating-linear-gradient(#e4e7ea 0 3px,#9aa2ab 3px 5px);outline:1px dashed #7fb3f5;outline-offset:3px;transform:rotate({{ impAng }}deg);transform-origin:50% 100%;"></div>
                 </sc-if>
                 <span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;"><span style="width:7px;height:7px;border-radius:50%;background:#3d8ff0;"></span>PARASSAGITAL · CORTE {{ cutN }}</span>
@@ -454,10 +486,10 @@ a:hover{color:#a9cbf8;}
                 <div style="flex:1;min-height:0;position:relative;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;"><div style="position:relative;width:100%;aspect-ratio:640/285;"><img src="assets/clean/mpr_coronal.png" alt="Coronal" style="width:100%;height:100%;display:block;filter:{{ imgFilter }};"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:70%;top:18%;width:{{ pl.coW }}px;height:{{ pl.coH }}%;transform:translateX(-50%) rotate({{ impAng }}deg);transform-origin:50% 100%;border-radius:2px 2px 6px 6px;background:repeating-linear-gradient(#e4e7ea 0 2px,#9aa2ab 2px 4px);outline:1px dashed #7fb3f5;outline-offset:3px;"></span></sc-if></div><span style="position:absolute;left:12px;top:10px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.04em;"><span style="width:7px;height:7px;border-radius:50%;background:#3fb950;"></span>CORONAL</span></div>
               </div>
               <div style="width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:4px;">
-                <div style="position:relative;aspect-ratio:960/680;background:#0b1526;overflow:hidden;"><img src="assets/3d/05_modelo_base.jpg" alt="Referência 3D" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ volOpacity }};"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:61%;top:30%;width:8px;height:{{ pl.refH }}px;transform:rotate({{ impAng }}deg);border-radius:2px;background:#e4e7ea;outline:1px dashed #7fb3f5;outline-offset:2px;"></span></sc-if><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;">REFERÊNCIA 3D</span></div>
-                <div style="flex:1;background:#18191b;padding:14px;display:flex;flex-direction:column;gap:6px;font-size:13px;">
+                <div style="position:relative;aspect-ratio:960/680;background:#0d1116;overflow:hidden;"><img src="assets/3d/02_segmentacao_frontal.jpg" alt="Referência 3D · maxila e dentes" style="width:100%;height:100%;object-fit:cover;display:block;opacity:{{ volOpacity }};filter:saturate(0.55) brightness(0.8);-webkit-mask-image:linear-gradient(to bottom,#000 50%,transparent 58%);mask-image:linear-gradient(to bottom,#000 50%,transparent 58%);"><sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:61%;top:30%;width:8px;height:{{ pl.refH }}px;transform:rotate({{ impAng }}deg);border-radius:2px;background:#e4e7ea;outline:1px dashed #7fb3f5;outline-offset:2px;"></span></sc-if><span style="position:absolute;left:8px;top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;color:#8c939a;">REFERÊNCIA 3D</span></div>
+                <div style="flex:1;background:#151617;padding:12px;display:flex;flex-direction:column;gap:6px;font-size:13px;">
                   <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><span style="font-weight:500;font-size:14px;">Implante 1</span><span style="color:#b4bac2;">Ø {{ impD }} × {{ impL }} mm · {{ impAng }}°</span><span style="color:#b4bac2;">Região {{ tooth }} · Corte {{ cutN }}</span></sc-if>
-                  <sc-if value="{{ noImplant }}" hint-placeholder-val="{{ true }}"><div onClick="{{ addImplant }}" style="display:flex;align-items:center;gap:8px;color:#7fb3f5;cursor:pointer;">{{ ic.mais }}Adicionar implante</div></sc-if>
+                  <sc-if value="{{ noImplant }}" hint-placeholder-val="{{ true }}"><span style="color:#6d737a;">Nenhum implante</span></sc-if>
                 </div>
               </div>
             </div>
@@ -466,60 +498,60 @@ a:hover{color:#a9cbf8;}
         </div>
       </div>
 
-      <div style="width:300px;flex-shrink:0;background:#1c1e20;border:1px solid #26292c;border-left:none;border-radius:0 8px 8px 0;margin-top:12px;overflow:auto;">
-        <div style="height:48px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #26292c;font-size:15px;font-weight:500;">{{ panelTitle }}</div>
+      <div style="display:{{ panelDisp }};width:272px;flex-shrink:0;background:#1c1e20;border:1px solid #26292c;border-left:none;border-radius:0 8px 8px 0;margin-top:12px;overflow:auto;">
+        <div style="height:48px;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid #26292c;font-size:14px;font-weight:500;">{{ panelTitle }}</div>
 
         <sc-if value="{{ isMpr }}" hint-placeholder-val="{{ true }}">
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px;border-bottom:1px solid #26292c;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">LAYOUT</span>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:3px;background:#151617;border-radius:7px;font-size:13px;text-align:center;">
               <sc-for list="{{ layoutOpts }}" as="o" hint-placeholder-count="4"><div onClick="{{ o.onClick }}" style="padding:6px 0;border-radius:5px;cursor:pointer;{{ o.style }}">{{ o.label }}</div></sc-for>
             </div>
             <div onClick="{{ toggleSync }}" style="display:flex;align-items:center;justify-content:space-between;font-size:14px;cursor:pointer;"><span>Sincronizar planos</span><span style="width:30px;height:18px;border-radius:9px;background:{{ syncBg }};position:relative;"><span style="position:absolute;left:{{ syncX }}px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left 0.15s;"></span></span></div>
           </div>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
             <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">POSIÇÃO NO VOLUME</span><span onClick="{{ centerPos }}" style="font-size:12px;color:#7fb3f5;cursor:pointer;">Centralizar</span></div>
             <sc-for list="{{ posRows }}" as="r" hint-placeholder-count="3">
               <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.color }};"></span><span style="flex:1;">{{ r.label }}</span><span onClick="{{ r.onMinus }}" style="width:28px;height:28px;border-radius:6px;background:#26292c;display:flex;align-items:center;justify-content:center;cursor:pointer;">−</span><span onClick="{{ r.onPlus }}" style="width:28px;height:28px;border-radius:6px;background:#26292c;display:flex;align-items:center;justify-content:center;cursor:pointer;">+</span></div>
             </sc-for>
           </div>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">MEDIDAS</span>
             <span style="font-size:13px;color:#7d848b;">Nenhuma medida</span>
           </div>
         </sc-if>
 
         <sc-if value="{{ isPara }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">SÉRIE</span>
-            <div style="display:flex;justify-content:space-between;font-size:14px;"><span>Região {{ tooth }}</span><span style="color:#8c939a;">12 cortes</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;white-space:nowrap;"><span>Região {{ tooth }}</span><span style="color:#8c939a;">12 cortes</span></div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:4px;background:#151617;border-radius:7px;"><div onClick="{{ prevCut }}" style="width:30px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.esq }}</div><span style="font-size:13px;font-variant-numeric:tabular-nums;">Corte {{ cutN }} de 12</span><div onClick="{{ nextCut }}" style="width:30px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;">{{ ic.dir }}</div></div>
           </div>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid #26292c;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;margin-bottom:6px;">MEDIDAS</span>
             <sc-if value="{{ measure }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Altura</span><span style="color:#8c939a;">— mm</span></div>
-              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;border-top:1px solid #26292c;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Largura</span><span style="color:#8c939a;">— mm</span></div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Altura</span><span style="color:#7d848b;">Não calculado</span></div>
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;border-top:1px solid #26292c;"><span style="width:14px;height:2px;background:#f2b84b;"></span><span style="flex:1;">Largura</span><span style="color:#7d848b;">Não calculado</span></div>
             </sc-if>
             <sc-if value="{{ noMeasure }}" hint-placeholder-val="{{ true }}"><div onClick="{{ toggleMeasure }}" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#7fb3f5;cursor:pointer;">{{ ic.medir }}Medir altura e largura</div></sc-if>
           </div>
-          <div onClick="{{ toggleParams }}" style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #26292c;cursor:pointer;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">PARÂMETROS DA SÉRIE</span><span style="display:flex;color:#8c939a;transform:{{ paramsRot }};">{{ ic.chevDown }}</span></div>
+          <div onClick="{{ toggleParams }}" style="padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #26292c;cursor:pointer;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">PARÂMETROS DA SÉRIE</span><span style="display:flex;color:#8c939a;transform:{{ paramsRot }};">{{ ic.chevDown }}</span></div>
           <sc-if value="{{ paramsOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;font-size:13px;border-bottom:1px solid #26292c;"><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espessura</span><span>Definida pelo exame</span></div><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espaçamento</span><span>Definido pelo motor</span></div></div>
+            <div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:8px;font-size:13px;border-bottom:1px solid #26292c;"><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espessura</span><span>Definida pelo exame</span></div><div style="display:flex;justify-content:space-between;"><span style="color:#b4bac2;">Espaçamento</span><span>Definido pelo motor</span></div></div>
           </sc-if>
         </sc-if>
 
         <sc-if value="{{ showImgSection }}" hint-placeholder-val="{{ true }}">
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid #26292c;">
             <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">IMAGEM</span><span onClick="{{ resetImg }}" style="display:flex;align-items:center;gap:4px;font-size:12px;color:#7fb3f5;cursor:pointer;">Restaurar</span></div>
             <sc-for list="{{ imgSliders }}" as="s" hint-placeholder-count="2">
-              <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#c6cacf;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+              <div style="display:flex;flex-direction:column;gap:4px;"><div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#c6cacf;">{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
             </sc-for>
           </div>
         </sc-if>
 
         <sc-if value="{{ is3d }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:16px 18px 8px;display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">ESTRUTURAS SEGMENTADAS</span><span onClick="{{ resetStructs }}" style="font-size:12px;color:#7fb3f5;cursor:pointer;">Restaurar</span></div>
+          <div style="padding:14px 16px 6px;display:flex;justify-content:space-between;"><span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">ESTRUTURAS SEGMENTADAS</span><span onClick="{{ resetStructs }}" style="font-size:12px;color:#7fb3f5;cursor:pointer;">Restaurar</span></div>
           <div style="padding:0 10px 12px;display:flex;flex-direction:column;gap:2px;">
             <sc-for list="{{ structs }}" as="s" hint-placeholder-count="5">
               <div style="display:flex;flex-direction:column;gap:12px;padding:9px 8px;border-radius:6px;{{ s.rowStyle }}">
@@ -540,31 +572,31 @@ a:hover{color:#a9cbf8;}
         </sc-if>
 
         <sc-if value="{{ isPlan }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
-            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;margin-bottom:4px;">OBJETOS</span>
-            <div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:6px 0;"><span style="width:8px;height:8px;border-radius:50%;background:#e5484d;"></span><span style="flex:1;">Canal mandibular</span><span style="font-size:12px;color:#8c939a;">segmentado</span></div>
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
+            <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">OBJETOS</span>
+            <div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:4px 0;white-space:nowrap;"><span style="width:8px;height:8px;border-radius:50%;background:#f2b84b;"></span><span style="flex:1;">Seio maxilar</span><span style="font-size:12px;color:#8c939a;">referência</span></div>
             <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:8px 10px;margin:0 -10px;background:#1d2734;border-radius:6px;"><span style="width:8px;height:8px;border-radius:50%;background:#3d8ff0;"></span><span style="flex:1;">Implante 1</span><span style="font-size:12px;color:#b4bac2;">Ø{{ impD }} × {{ impL }}</span><span onClick="{{ removeImplant }}" title="Remover" style="display:flex;color:#8c939a;cursor:pointer;">{{ ic.limpar }}</span></div></sc-if>
           </div>
           <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #26292c;">
+            <div style="padding:14px 16px;display:flex;flex-direction:column;gap:14px;border-bottom:1px solid #26292c;">
               <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">IMPLANTE 1</span>
               <div style="display:flex;align-items:center;justify-content:space-between;font-size:14px;"><span>Diâmetro</span><div style="display:flex;gap:2px;padding:2px;background:#151617;border-radius:6px;"><sc-for list="{{ dOpts }}" as="o" hint-placeholder-count="3"><span onClick="{{ o.onClick }}" style="padding:4px 9px;border-radius:4px;font-size:13px;cursor:pointer;{{ o.style }}">{{ o.label }}</span></sc-for></div></div>
               <div style="display:flex;align-items:center;justify-content:space-between;font-size:14px;"><span>Comprimento</span><div style="display:flex;gap:2px;padding:2px;background:#151617;border-radius:6px;"><sc-for list="{{ lOpts }}" as="o" hint-placeholder-count="4"><span onClick="{{ o.onClick }}" style="padding:4px 8px;border-radius:4px;font-size:13px;cursor:pointer;{{ o.style }}">{{ o.label }}</span></sc-for></div></div>
               <sc-for list="{{ angSlider }}" as="s" hint-placeholder-count="1">
-                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+                <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
               </sc-for>
             </div>
           </sc-if>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #26292c;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #26292c;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">RELAÇÃO ANATÔMICA</span>
-            <div style="display:flex;justify-content:space-between;font-size:14px;"><span style="color:#c6cacf;">Ápice ao seio maxilar</span><span style="color:#8c939a;">—</span></div>
+            <sc-if value="{{ implant }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:space-between;font-size:14px;white-space:nowrap;"><span style="color:#c6cacf;">Ápice ao seio maxilar</span><span style="color:#7d848b;">Não calculado</span></div></sc-if>
+            <sc-if value="{{ noImplant }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px;"><span style="font-size:13px;color:#7d848b;line-height:1.45;text-wrap:pretty;">Adicione um implante para avaliar a relação anatômica.</span><div onClick="{{ addImplant }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 8px;margin-left:-8px;border-radius:6px;font-size:13px;color:#7fb3f5;white-space:nowrap;cursor:pointer;" style-hover="background:#1d2734;">{{ ic.mais }}Adicionar implante</div></div></sc-if>
           </div>
-          <div style="padding:16px 18px;display:flex;flex-direction:column;gap:14px;">
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:14px;">
             <span style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:#8c939a;">TRANSPARÊNCIA</span>
             <sc-for list="{{ volSlider }}" as="s" hint-placeholder-count="1">
-              <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onClick="{{ s.onClick }}" style="position:relative;height:16px;cursor:pointer;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
+              <div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;justify-content:space-between;font-size:14px;"><span>{{ s.label }}</span><span style="font-variant-numeric:tabular-nums;">{{ s.val }}</span></div><div onMouseDown="{{ s.onDown }}" style="position:relative;height:16px;cursor:pointer;user-select:none;"><div style="position:absolute;left:0;right:0;top:6px;height:4px;border-radius:2px;background:#33373b;"></div><div style="position:absolute;left:0;top:6px;height:4px;width:{{ s.pct }}%;border-radius:2px;background:#3d8ff0;"></div><div style="position:absolute;left:{{ s.pct }}%;top:1px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ebecee;"></div></div></div>
             </sc-for>
-            <div onClick="{{ toggleCanal }}" style="display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer;"><span style="width:18px;height:18px;border-radius:4px;background:{{ canalBg }};border:1px solid #3d8ff0;display:flex;align-items:center;justify-content:center;color:#fff;">{{ canalCheck }}</span>Destacar canal mandibular</div>
           </div>
         </sc-if>
       </div>
@@ -572,29 +604,31 @@ a:hover{color:#a9cbf8;}
   </sc-if>
 </sc-if>
 
+<sc-if value="{{ tipOn }}" hint-placeholder-val="{{ false }}"><div style="position:fixed;left:{{ tip.x }}px;top:{{ tip.y }}px;transform:translateX(-50%);max-width:260px;padding:7px 10px;background:#2a2e32;color:#ebecee;font-size:12px;line-height:1.4;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.45);pointer-events:none;z-index:50;text-wrap:pretty;">{{ tip.text }}</div></sc-if>
+
 <sc-if value="{{ isPresent }}" hint-placeholder-val="{{ false }}">
-  <div data-screen-label="Apresentar ao paciente" style="flex:1;display:flex;flex-direction:column;min-height:0;background:#0b1526;">
+  <div data-screen-label="Apresentar ao paciente" style="flex:1;display:flex;flex-direction:column;min-height:0;background:#151617;">
     <div style="height:64px;flex-shrink:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 20px;">
       <div style="display:flex;align-items:center;gap:14px;">
         <div title="Voltar" onClick="{{ closePresent }}" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#c6cacf;">{{ ic.esq }}</div>
         <span style="font-size:17px;font-weight:500;">Ana Souza</span>
       </div>
-      <div style="display:flex;gap:2px;padding:3px;background:rgba(255,255,255,0.06);border-radius:9px;">
-        <sc-for list="{{ comps }}" as="c" hint-placeholder-count="3"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:8px;padding:8px 18px;border-radius:7px;font-size:14px;cursor:pointer;{{ c.style }}"><span style="display:flex;">{{ c.icon }}</span>{{ c.label }}</div></sc-for>
+      <div style="display:flex;gap:2px;padding:3px;background:#232629;border-radius:9px;">
+        <sc-for list="{{ comps }}" as="c" hint-placeholder-count="3"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 16px;border-radius:7px;font-size:14px;white-space:nowrap;cursor:pointer;{{ c.style }}"><span style="display:flex;">{{ c.icon }}</span>{{ c.label }}</div></sc-for>
       </div>
       <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;">
-        <div onClick="{{ closePresent }}" style="padding:10px 18px;border:1px solid rgba(255,255,255,0.16);border-radius:8px;font-size:14px;cursor:pointer;">Concluir apresentação</div>
-        <div onClick="{{ exportImg }}" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.download }}{{ exportLabel }}</div>
+        <div onClick="{{ closePresent }}" style="display:flex;align-items:center;height:36px;padding:0 16px;background:#2c3034;border-radius:8px;font-size:14px;white-space:nowrap;cursor:pointer;" style-hover="background:#353a3f;">Concluir apresentação</div>
+        <div onClick="{{ exportImg }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;white-space:nowrap;background:#3d8ff0;color:#fff;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;">{{ ic.download }}{{ exportLabel }}</div>
       </div>
     </div>
-    <div style="flex:1;min-height:0;position:relative;margin:0 16px 16px;border-radius:12px;overflow:hidden;background:{{ stageBg }};">
+    <div style="flex:1;min-height:0;position:relative;margin:0 16px 16px;border-radius:8px;overflow:hidden;background:{{ stageBg }};">
       <div onClick="{{ onStage }}" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:{{ stageCursor }};">
         <sc-if value="{{ p3d }}" hint-placeholder-val="{{ true }}">
-          <div style="position:relative;height:96%;max-width:100%;aspect-ratio:960/680;"><img src="{{ pImg3d }}" alt="3D" style="width:100%;height:100%;display:block;"></div>
+          <x-import component-from-global-scope="dio-3d" from="./dio-3d.js" view="full" vis="maxila,mandibula,dentes,canal" focus="{{ pFocus }}" interactive="{{ pInter }}" style="position:absolute;inset:0;" hint-size="100%,100%"></x-import>
         </sc-if>
         <sc-if value="{{ p3dev }}" hint-placeholder-val="{{ false }}">
           <div style="width:100%;height:100%;display:grid;grid-template-columns:3fr 2fr;gap:0;">
-            <div style="position:relative;display:flex;align-items:center;justify-content:center;min-width:0;"><div style="position:relative;width:100%;aspect-ratio:960/680;"><img src="{{ pImg3d }}" alt="3D" style="width:100%;height:100%;display:block;"><span style="position:absolute;left:62%;top:38%;width:64px;height:64px;transform:translate(-50%,-50%);border:2.5px solid #f2b84b;border-radius:50%;"></span><span style="position:absolute;left:62%;top:38%;margin:-58px 0 0 26px;padding:3px 10px;background:#f2b84b;color:#1a1406;font-size:14px;font-weight:600;border-radius:4px;">26</span></div></div>
+            <div style="position:relative;min-width:0;"><x-import component-from-global-scope="dio-3d" from="./dio-3d.js" view="dente" vis="maxila,dentes,seio" mark="26" focus="{{ pFocus }}" interactive="{{ pInter }}" style="position:absolute;inset:0;" hint-size="100%,100%"></x-import></div>
             <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px 40px 28px 8px;min-width:0;">
               <div style="position:relative;height:86%;max-width:100%;aspect-ratio:280/462;border-radius:8px;overflow:hidden;outline:2.5px solid #f2b84b;outline-offset:-2px;background:#000;"><img src="{{ cutSrc }}" alt="Corte" style="width:100%;height:100%;display:block;"></div>
               <span style="font-size:16px;font-weight:500;">Região 26 · Corte {{ cutN }}</span>
@@ -606,16 +640,16 @@ a:hover{color:#a9cbf8;}
         </sc-if>
         {{ marksOverlay }}
       </div>
-      <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;padding:5px;background:rgba(20,24,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+      <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;padding:4px;background:rgba(22,25,28,0.9);border-radius:10px;">
         <sc-for list="{{ pTools }}" as="t" hint-placeholder-count="7">
-          <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="height:1px;background:rgba(255,255,255,0.1);margin:4px 6px;"></span></sc-if>
-          <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:56px;padding:8px 0 6px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};font-size:11px;">{{ t.icon }}{{ t.title }}</div></sc-if>
+          <sc-if value="{{ t.sep }}" hint-placeholder-val="{{ false }}"><span style="height:1px;background:rgba(255,255,255,0.08);margin:3px 8px;"></span></sc-if>
+          <sc-if value="{{ t.btn }}" hint-placeholder-val="{{ true }}"><div title="{{ t.title }}" onClick="{{ t.onClick }}" style="width:60px;height:52px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};font-size:11px;white-space:nowrap;">{{ t.icon }}{{ t.title }}</div></sc-if>
         </sc-for>
       </div>
-      <div style="position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:5px 6px 5px 14px;background:rgba(20,24,30,0.92);border:1px solid rgba(255,255,255,0.08);border-radius:999px;">
-        <span style="font-size:13px;color:#b4bac2;margin-right:4px;">Destacar</span>
-        <sc-for list="{{ hiChips }}" as="c" hint-placeholder-count="4"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;font-size:13px;cursor:pointer;{{ c.style }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ c.color }};"></span>{{ c.label }}</div></sc-for>
-      </div>
+      <sc-if value="{{ showHi }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:3px 3px 3px 12px;background:rgba(22,25,28,0.9);border-radius:8px;">
+        <span style="font-size:12px;color:#7d848b;margin-right:6px;white-space:nowrap;">Destacar</span>
+        <sc-for list="{{ hiChips }}" as="c" hint-placeholder-count="4"><div onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:7px;height:30px;padding:0 12px;border-radius:6px;font-size:13px;white-space:nowrap;cursor:pointer;{{ c.style }}"><span style="width:8px;height:8px;border-radius:50%;background:{{ c.color }};"></span>{{ c.label }}</div></sc-for>
+      </div></sc-if>
     </div>
   </div>
 </sc-if>
@@ -628,12 +662,12 @@ class Component extends DCLogic {
     screen: 'home', patient: false, cbct: false, file: false,
     alignMode: 'review', align: { h: 0, v: 0, r: 0 }, alignSaved: { h: 0, v: 0, r: 0 }, applied: false,
     processing: false, progress: 0,
-    top: 'analise', anaView: 'resumo', anaViewer: 'pano', mode: 'mpr', cut: 6, tooth: '26',
+    top: 'analise', anaView: 'resumo', anaViewer: 'pano', mode: 'mpr', cut: 5, finding: 0, zoom: 1, mLine: null, vis3: { maxila: true, mandibula: true, dentes: true, canal: true, seio: true }, view3: 'full', zoom3: 1, tooth: '26',
     measure: false, imgPop: false, bri: 50, con: 50, mprLayout: '2x2', sync: true, paramsOpen: false, tool: 'mover',
     vis: { maxila: true, mandibula: true, dsup: true, dinf: true, canal: true },
     op: { maxila: 30, mandibula: 40, dsup: 100, dinf: 100, canal: 100 }, sel3d: 'mandibula', preset: 'translucida',
     implant: false, impD: '4', impL: '10', impAng: 0, volOp: 100, canalHi: true,
-    pComp: '3d', pTool: 'selecionar', marks: [], pHi: { canal: true }, pos: { x: 66, y: 38, z: 48 }, vp: {}, ang: 0, planesOpen: false, exported: false
+    pComp: '3d', pTool: 'selecionar', marks: [], pHi: { canal: true }, pos: { x: 66, y: 38, z: 48 }, vp: {}, ang: 0, planesOpen: false, exported: false, tip: null
   };
   wizRef = React.createRef();
   componentDidUpdate(pp, ps) {
@@ -643,6 +677,7 @@ class Component extends DCLogic {
       if (k(ps) !== k(this.state)) setTimeout(() => el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' }), 30);
     }
   }
+  componentDidMount() { window.__dio = o => this.setState(o); window.__dio3dRotate = a => this.setState({ ang: a }); window.__dio3dZoom = z => this.setState({ zoom3: z }); }
   componentWillUnmount() { clearInterval(this.timer); }
   icons() {
     if (this._ic) return this._ic;
@@ -699,20 +734,22 @@ class Component extends DCLogic {
       cadeado: S(r(4, 8, 10, 7.5, 1.5), p('M6 8V5.5a3 3 0 0 1 6 0V8')),
       ajustes: S(p('M3 5h12M3 9h12M3 13h12'), c(6, 5, 1.4, 1), c(12, 9, 1.4, 1), c(8, 13, 1.4, 1)),
       isolar: S(c(9, 9, 6.5), c(9, 9, 2.5, 1)),
-      painel: S(r(2.5, 3, 13, 12), p('M11 3v12'))
+      painel: S(r(2.5, 3, 13, 12), p('M11 3v12')),
+      info: h('svg', { width: 14, height: 14, viewBox: '0 0 18 18', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', style: { display: 'block', flexShrink: 0 } }, c(9, 9, 7), p('M9 8.3v4.6'), c(9, 5.4, 1, 1))
     };
     return this._ic;
   }
   slider(label, value, min, max, fmt, set) {
     const pct = ((value - min) / (max - min)) * 100;
-    return { label, val: fmt(value), pct: pct.toFixed(1), onClick: e => { const b = e.currentTarget.getBoundingClientRect(); const t = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); set(Math.round(min + t * (max - min))); } };
+    return { label, val: fmt(value), pct: pct.toFixed(1), onClick: e => { const b = e.currentTarget.getBoundingClientRect(); const t = Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)); set(Math.round(min + t * (max - min))); },
+      onDown: e => { e.preventDefault(); const b = e.currentTarget.getBoundingClientRect(); const at = x => set(Math.round(min + Math.max(0, Math.min(1, (x - b.left) / b.width)) * (max - min))); at(e.clientX); this.dragging = true; const mv = ev => at(ev.clientX); const up = () => { this.dragging = false; window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); this.forceUpdate(); }; window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up); } };
   }
   tb(items, active) {
     const ic = this.icons();
     return items.map(it => {
-      if (it === '|') return { sep: true, btn: false, txt: false };
+      if (it === '|') return { sep: true, btn: false, txt: false, sw: false };
       const on = it.on || (active && it.k === active);
-      return { sep: false, btn: !it.label, txt: !!it.label, label: it.label || '', title: it.t, icon: ic[it.i], onClick: it.f || (() => it.k && this.setState({ tool: it.k })), bg: on ? '#22324a' : 'transparent', fg: on ? '#7fb3f5' : '#c6cacf', op: it.dis ? 0.4 : 1 };
+      return { sep: false, btn: !it.label && !it.sw, txt: !!it.label && !it.sw, sw: !!it.sw, swBg: it.on ? '#3d8ff0' : '#3a3f44', swX: it.on ? 12 : 2, label: it.label || '', title: it.t, icon: ic[it.i], onClick: it.f || (() => it.k && this.setState({ tool: it.k })), bg: on ? '#22324a' : 'transparent', fg: on ? '#7fb3f5' : '#c6cacf', op: it.dis ? 0.4 : 1 };
     });
   }
   baseVals() {
@@ -733,7 +770,7 @@ class Component extends DCLogic {
     const types = [['Panorâmica', 'panoramica'], ['Periapical', 'dente'], ['Interproximal', 'interprox'], ['Levantamento periapical', 'levantamento'], ['Tomografia (CBCT)', 'cubo']];
     const examTypes = types.map(([label, i], k) => {
       const sel = k === 4 && s.cbct;
-      return { label, icon: ic[i], onClick: () => this.setState(st => (st.patient && k === 4 ? { cbct: true } : null)), style: `display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:8px;cursor:${s.patient ? 'pointer' : 'default'};background:${sel ? '#2f3b49' : '#2c2f33'};border:1px solid ${sel ? '#3d8ff0' : 'transparent'};color:${s.patient ? '#ebecee' : '#7d848b'};` };
+      return { label, icon: ic[i], onClick: () => this.setState(st => (st.patient && k === 4 ? { cbct: true } : null)), style: `display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:8px;cursor:${s.patient ? 'pointer' : 'default'};background:${sel ? '#2f3b49' : '#2c2f33'};border:1px solid ${sel ? '#3d8ff0' : 'transparent'};color:${s.patient ? '#ebecee' : '#7d848b'};` };
     });
     const rot = v => `rotate(${v}deg)`;
     const a = s.align;
@@ -743,7 +780,7 @@ class Component extends DCLogic {
       this.slider('Inclinação vertical', a.v, -20, 20, deg, v => set({ align: { ...s.align, v } })),
       this.slider('Rotação', a.r, -20, 20, deg, v => set({ align: { ...s.align, r: v } }))
     ];
-    const procLabels = ['Reconstrução do volume', 'Panorâmica e arco', 'Cortes parassagitais', 'Segmentação'];
+    const procLabels = ['Orientação do volume', 'Panorâmica e arco', 'Cortes parassagitais', 'Segmentação'];
     const procItems = procLabels.map((label, k) => { const d = s.progress >= (k + 1) * 25; return { label, icon: d ? ic.check : ic.reset, color: d ? '#ebecee' : '#7d848b' }; });
     // region geometry
     const up = ['18', '17', '16', '15', '14', '13', '12', '11', '21', '22', '23', '24', '25', '26', '27', '28'];
@@ -752,7 +789,7 @@ class Component extends DCLogic {
     const cx = 6 + idx * (88 / 15), bw = 12;
     const band = { left: (cx - bw / 2).toFixed(2), w: bw, top: isUp ? 2 : 36, h: isUp ? 38 : 50, labelTop: isUp ? 2 : 36, objPos: `${(cx).toFixed(0)}% 50%` };
     const lineAt = k => (cx - bw / 2) + bw * (k + 0.5) / 12;
-    const panoLines = Array.from({ length: 12 }, (_, k) => ({ left: lineAt(k).toFixed(2), w: k === s.cut ? 2 : 1, bg: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.4)' }));
+    const panoLines = Array.from({ length: 12 }, (_, k) => ({ left: lineAt(k).toFixed(2), w: k === s.cut ? 2 : 1, bg: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.18)' }));
     const tooth = (n) => ({ n, onClick: () => set({ tooth: n }), style: n === s.tooth ? 'background:#2f3b49;border:1px solid #3d8ff0;color:#ebecee;' : 'background:#232629;border:1px solid transparent;color:#9ba1a8;' });
     const cutSrc = k => `assets/clean/corte_${String(k).padStart(2, '0')}.png`;
     const series = Array.from({ length: 12 }, (_, k) => {
@@ -769,7 +806,7 @@ class Component extends DCLogic {
     const h = React.createElement, lerp = (x, y, t) => x + (y - x) * t;
     const arcoOverlay = h('svg', { viewBox: '0 0 432 528', style: { position: 'absolute', inset: 0, width: '100%', height: '100%' } },
       h('polygon', { points: '316,44 360,150 318,168 280,74', fill: 'rgba(61,143,240,0.16)', stroke: '#3d8ff0', strokeWidth: 1.2 }),
-      ...Array.from({ length: 12 }, (_, k) => { const t = (k + 0.5) / 12; return h('line', { key: k, x1: lerp(316, 360, t), y1: lerp(44, 150, t), x2: lerp(280, 318, t), y2: lerp(74, 168, t), stroke: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.5)', strokeWidth: k === s.cut ? 4 : 1.2 }); }));
+      ...Array.from({ length: 12 }, (_, k) => { const t = (k + 0.5) / 12; return h('line', { key: k, x1: lerp(316, 360, t), y1: lerp(44, 150, t), x2: lerp(280, 318, t), y2: lerp(74, 168, t), stroke: k === s.cut ? '#3d8ff0' : 'rgba(127,179,245,0.22)', strokeWidth: k === s.cut ? 3.5 : 1 }); }));
     // explorar
     const modeDefs = [['mpr', 'MPR', 'grid4'], ['para', 'Parassagital', 'para'], ['3d', 'Visão 3D', 'cubo'], ['plan', 'Planejamento', 'plan']];
     const modes = modeDefs.map(([k, label, i]) => ({ label, icon: ic[i], onClick: () => set({ mode: k }), style: s.mode === k ? 'background:#2c3034;color:#ebecee;box-shadow:inset 0 0 0 1px #3a3f44;' : 'color:#9ba1a8;' }));
@@ -777,7 +814,7 @@ class Component extends DCLogic {
     const t3d = [{ k: 'selecionar', i: 'selecionar', t: 'Selecionar' }, { k: 'rotacionar', i: 'rotacionar', t: 'Rotacionar' }, { k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, '|', { i: 'reset', t: 'Restaurar vista', f: () => this.resetStructs() }, { i: 'telacheia', t: 'Tela cheia', f: () => {} }, '|', { i: 'isolar', t: 'Isolar seleção', label: 'Isolar', f: () => this.isolar(s.sel3d) }, { i: 'dente', t: 'Selecione um dente no modelo', label: 'Dente em foco', dis: true, f: () => {} }];
     const tPlan = [{ k: 'selecionar', i: 'selecionar', t: 'Selecionar' }, { k: 'rotacionar', i: 'rotacionar', t: 'Rotacionar' }, { k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, { k: 'medir', i: 'medir', t: 'Medir' }, '|', { i: 'reset', t: 'Restaurar vista', f: () => {} }, { i: 'telacheia', t: 'Tela cheia', f: () => {} }, '|', { i: 'mais', t: 'Adicionar implante', label: 'Adicionar implante', f: () => set({ implant: true }), dis: s.implant }];
     const tbExp = this.tb(s.mode === '3d' ? t3d : s.mode === 'plan' ? tPlan : base, s.tool);
-    const tbEvid = this.tb([{ k: 'mover', i: 'mover', t: 'Mover' }, { k: 'zoom', i: 'zoom', t: 'Zoom' }, { i: 'brilho', t: 'Imagem', f: () => set({ imgPop: !s.imgPop }), on: s.imgPop }, { i: 'medir', t: 'Medir', f: toggleMeasure, on: s.measure }, '|', { i: 'maximizar', t: 'Abrir no Explorar exame', f: () => set({ top: 'explorar', mode: 'para', imgPop: false }) }, { i: 'cubo', t: 'Ver em 3D', f: () => set({ top: 'explorar', mode: '3d', imgPop: false }) }, { i: 'grid4', t: 'Planos no MPR', f: () => set({ top: 'explorar', mode: 'mpr', imgPop: false }) }, '|', { i: 'telacheia', t: 'Tela cheia', f: () => {} }], s.tool);
+    const tbEvid = this.tb([{ i: 'brilho', t: 'Brilho / contraste', f: () => set({ imgPop: !s.imgPop }), on: s.imgPop }, { i: 'medir', t: 'Medir', f: toggleMeasure, on: s.measure }]);
     const tbAnalise = this.tb([{ k: 'mover', i: 'mover', t: 'Mover' }, { i: 'zoomIn', t: 'Aproximar', f: () => {} }, { i: 'zoomOut', t: 'Afastar', f: () => {} }, '|', { i: 'ajustar', t: 'Ajustar à tela', f: () => {} }, { i: 'reset', t: 'Restaurar', f: () => {} }], s.tool);
     const planes = [['axial', 'AXIAL', 'assets/mpr/01_axial.jpg', '#e5484d'], ['coronal', 'CORONAL', 'assets/mpr/02_coronal.jpg', '#3fb950'], ['sagital', 'SAGITAL', 'assets/mpr/03_sagital.jpg', '#e3b341']];
     const mprViews = planes.map(([k, label, src, color]) => ({ label, src, color, onMax: () => set({ mprLayout: k }), outline: k === 'axial' ? 'outline:1px solid rgba(229,72,77,0.7);outline-offset:-1px;' : '' }));
@@ -841,13 +878,14 @@ class Component extends DCLogic {
       cbct: s.cbct, s3title: s.cbct ? 'Upload do exame DICOM' : 'Upload de imagens', s3sub: s.cbct ? 'Selecione o arquivo DICOM do exame tomográfico.' : 'Selecione o tipo de exame para liberar o upload.',
       uploadLocked: !s.cbct, uploadOpen: s.cbct && !s.file, file: s.file, doUpload: () => set({ file: true }), removeFile: () => set({ file: false, processing: false, progress: 0 }),
       alignLocked: !s.file, alignVisible: s.file, alignReview: s.file && s.alignMode === 'review', alignEdit: s.file && s.alignMode === 'edit',
-      alignTitle: s.applied ? 'Ajuste aplicado' : 'Alinhamento sugerido pela DIO',
+      alignTitle: s.applied ? 'Ajuste aplicado' : 'Alinhamento sugerido', alignDot: s.applied ? '#56c07a' : '#3d8ff0',
+      alignSummary: s.applied ? `H ${deg(a.h)} · V ${deg(a.v)} · R ${deg(a.r)}` : '',
       openAdjust: () => set({ alignMode: 'edit', alignSaved: { ...s.align } }),
       cancelAdjust: () => set({ alignMode: 'review', align: { ...s.alignSaved } }),
       applyAdjust: () => set({ alignMode: 'review', applied: s.align.h !== 0 || s.align.v !== 0 || s.align.r !== 0 }),
       resetAdjust: () => set({ align: { h: 0, v: 0, r: 0 } }),
       alignSliders,
-      alignViews: [{ label: 'Axial', src: 'assets/alinhamento/01_axial.jpg', rot: rot(a.r) }, { label: 'Coronal', src: 'assets/alinhamento/02_coronal.jpg', rot: rot(a.h) }, { label: 'Sagital', src: 'assets/alinhamento/03_sagital.jpg', rot: rot(a.v) }],
+      alignViews: [['Axial', '01_axial', a.r, 'Rotação'], ['Coronal', '02_coronal', a.h, 'Incl. horizontal'], ['Sagital', '03_sagital', a.v, 'Incl. vertical']].map(([label, f, d, n]) => ({ label, src: `assets/alinhamento/${f}.jpg`, rot: `rotate(${d}deg) scale(1.12)`, tr: this.dragging ? 'none' : 'transform 0.25s', angle: `${n} ${deg(d)}`, line: s.alignMode === 'edit' ? 'rgba(61,143,240,0.85)' : 'rgba(61,143,240,0.35)' })),
       backUpload: () => set({ file: false }),
       confirmAlign: () => {
         if (s.processing) return;
@@ -866,12 +904,12 @@ class Component extends DCLogic {
       anaPanoStyle: segN(s.anaViewer === 'pano'), ana3dStyle: segN(s.anaViewer === '3d'),
       band, panoLines, tooth: s.tooth, teethUp: up.map(tooth), teethLo: lo.map(tooth), thumbs5, tbAnalise,
       openEvid: () => set({ anaView: 'evidencia' }), backResumo: () => set({ anaView: 'resumo', imgPop: false }),
-      openMpr: () => set({ top: 'explorar', mode: 'mpr' }), open3d: () => set({ top: 'explorar', mode: '3d' }), open3dExp: () => set({ mode: '3d' }),
-      backAnalise: () => set({ top: 'analise', anaView: 'evidencia' }),
+      openMpr: () => set({ top: 'explorar', mode: 'mpr', imgPop: false, measure: false, mLine: null }), open3d: () => set({ top: 'explorar', mode: '3d', imgPop: false }), open3dExp: () => set({ mode: '3d' }),
+      backAnalise: () => set({ top: 'analise', anaView: 'resumo', imgPop: false, measure: false }),
       cutSrc: cutSrc(s.cut), cutN: s.cut + 1, prevCut, nextCut, series, selLine: lineAt(s.cut).toFixed(2),
       measure: s.measure, noMeasure: !s.measure, toggleMeasure, imgPop: s.imgPop, imgSliders, imgFilter, resetImg: () => set({ bri: 50, con: 50 }), tbEvid,
       modes, tbExp, isMpr: s.mode === 'mpr', isPara: s.mode === 'para', is3d: s.mode === '3d', isPlan: s.mode === 'plan',
-      expStatus: s.mode === 'mpr' ? (s.mprLayout === '2x2' ? 'Axial ativo' : single[1].charAt(0) + single[1].slice(1).toLowerCase() + ' ampliado') : s.mode === 'para' ? 'Corte ' + (s.cut + 1) + ' de 12' : s.mode === '3d' ? 'Rotação 0° · zoom 100%' : (s.implant ? '1 implante' : '0 implantes'),
+      expStatus: s.mode === 'mpr' ? (s.mprLayout === '2x2' ? 'Axial ativo' : single[1].charAt(0) + single[1].slice(1).toLowerCase() + ' ampliado') : s.mode === 'para' ? '' : s.mode === '3d' ? 'Rotação 0° · zoom 100%' : '',
       panelTitle: { mpr: 'MPR', para: 'Parassagital', '3d': 'Estruturas', plan: 'Planejamento' }[s.mode],
       mpr2x2: s.mprLayout === '2x2', mprSingle: s.mprLayout !== '2x2', mprSingleSrc: single[2], mprSingleLabel: single[1], mprSingleColor: single[3], setLayout2x2: () => set({ mprLayout: '2x2' }),
       mprViews, layoutOpts, toggleSync: () => set({ sync: !s.sync }), syncBg: s.sync ? '#3d8ff0' : '#3a3f44', syncX: s.sync ? 14 : 2,
@@ -907,6 +945,7 @@ class Component extends DCLogic {
   extraVals(b) {
     const s = this.state, ic = this.icons(), set = o => this.setState(o);
     const setCut = k => set({ cut: Math.max(0, Math.min(11, k)), measure: false });
+    const tip = text => e => { const r = e.currentTarget.getBoundingClientRect(); this.setState({ tip: { text, x: Math.max(140, Math.min(window.innerWidth - 140, r.left + r.width / 2)), y: r.bottom + 8 } }); };
     const cutSrc = k => 'assets/clean/corte_' + String(k).padStart(2, '0') + '.png';
     const series = b.series.map((c, k) => ({ ...c, onClick: () => setCut(k) }));
     const thumbs5 = [4, 5, 6, 7, 8].map(k => ({ src: cutSrc(k), onClick: () => set({ cut: k, measure: false, anaView: 'evidencia' }), style: k === s.cut ? 'outline:2px solid #3d8ff0;outline-offset:-2px;' : '' }));
@@ -921,8 +960,8 @@ class Component extends DCLogic {
       const [ax, bx, vc, hc] = axes[k], L = local(k), isRef = k === 'ref';
       const single = s.mprLayout !== '2x2';
       return {
-        label: isRef ? 'REFERÊNCIA 3D' : C[k][0], color: isRef ? '#7fb3f5' : C[k][2], src: isRef ? 'assets/3d/05_modelo_base.jpg' : C[k][1], bg: isRef ? '#0b1526' : '#000',
-        ar: isRef ? '960/680' : '640/285', filter: isRef ? 'none' : b.imgFilter, cursor: isRef ? 'default' : 'crosshair',
+        label: isRef ? 'REFERÊNCIA 3D' : C[k][0], color: isRef ? '#7fb3f5' : C[k][2], src: isRef ? 'assets/3d/05_modelo_base.jpg' : C[k][1], bg: isRef ? '#0d1116' : '#000',
+        ar: isRef ? '960/680' : '640/285', filter: isRef ? 'saturate(0.5) brightness(0.78)' : b.imgFilter, cursor: isRef ? 'default' : 'crosshair',
         vx: L.a.toFixed(1), hy: L.b.toFixed(1), vc: vc, hc: hc,
         outline: k === 'axial' && !single ? 'outline:1px solid rgba(229,72,77,0.6);outline-offset:-1px;' : '',
         maxIcon: single ? ic.grid4 : ic.maximizar, maxTitle: single ? 'Voltar para 2×2' : 'Maximizar plano',
@@ -950,21 +989,69 @@ class Component extends DCLogic {
     const pl = { left: ((cx - w / 2) / 280 * 100).toFixed(2), top: ((crest - len) / 462 * 100).toFixed(2), w: (w / 280 * 100).toFixed(2), h: (len / 462 * 100).toFixed(2),
       lineX: (cx / 280 * 100).toFixed(2), sinusY: (64 / 462 * 100).toFixed(2), gapH: Math.max(0, (crest - len - 64) / 462 * 100).toFixed(2), axD: Math.round(dn * 5), coW: Math.round(dn * 4), coH: (ln * 3.6).toFixed(1), refH: Math.round(ln * 3) };
     // Present
-    const hiDefs = [['canal', 'Canal', '#e5484d'], ['dentes', 'Dentes', '#eceae6'], ['mandibula', 'Mandíbula', '#a78fd6'], ['maxila', 'Maxila', '#bdbd62']];
+    const reg = s.pComp === '3dev';
+    const hiDefs = [['canal', 'Canal mandibular', '#e5484d'], ['dentes', 'Dentes', '#eceae6'], ['mandibula', 'Mandíbula', '#a78fd6'], ['maxila', 'Maxila', '#bdbd62']].filter(d => !reg || d[0] === 'dentes' || d[0] === 'maxila');
     const hiChips = hiDefs.map(([k, label, color]) => ({ label, color, onClick: () => set({ pHi: { [k]: !s.pHi[k] } }), style: s.pHi[k] ? 'background:rgba(61,143,240,0.22);color:#ebecee;' : 'color:#b4bac2;' }));
-    const ph = s.pHi;
+    const ph = reg ? { dentes: s.pHi.dentes, maxila: s.pHi.maxila } : s.pHi;
     const pImg3d = ph.canal || ph.mandibula ? 'assets/3d/01_segmentacao_completa.jpg' : ph.maxila ? 'assets/3d/04_segmentacao_reduzida.jpg' : ph.dentes ? 'assets/3d/05_modelo_base.jpg' : 'assets/3d/02_segmentacao_frontal.jpg';
+    // MPR overrides
+    const zin = () => set({ zoom: Math.min(3, +(s.zoom + 0.25).toFixed(2)) }), zout = () => set({ zoom: Math.max(1, +(s.zoom - 0.25).toFixed(2)) });
+    const mprTools = this.tb([{ i: 'mover', t: 'Mover linhas de referência', on: !s.measure, f: () => set({ measure: false, tool: 'mover' }) }, { i: 'zoomIn', t: 'Aproximar', f: zin }, { i: 'zoomOut', t: 'Afastar', f: zout }, { i: 'brilho', t: 'Brilho / contraste', on: s.imgPop, f: () => set({ imgPop: !s.imgPop }) }, { i: 'medir', t: 'Medir distância', on: s.measure, f: () => set({ measure: !s.measure, mLine: null }) }, '|', { i: single ? 'grid4' : 'maximizar', t: single ? 'Voltar para 2×2' : 'Maximizar axial', f: () => set({ mprLayout: single ? '2x2' : 'axial' }) }, { i: 'reset', t: 'Restaurar', f: () => this.setState({ pos: { x: 66, y: 38, z: 48 }, vp: {}, bri: 50, con: 50, mprLayout: '2x2', measure: false, mLine: null, zoom: 1, imgPop: false }) }, '|', { i: 'camadas', t: 'Ao mover as linhas em um plano, os demais acompanham', sw: true, label: 'Planos sincronizados', on: s.sync, f: () => set({ sync: !s.sync, vp: {} }) }]);
+    const sliceAx = { axial: 'z', coronal: 'y', sagital: 'x' };
+    mprPanes.forEach(p => {
+      const k = Object.keys(C).find(q => C[q][0] === p.label);
+      p.zoom = k ? s.zoom : 1;
+      p.hasSlice = !!k; p.slice = k ? String(Math.round(P[sliceAx[k]])) : ''; p.onPrev = k ? nudge(sliceAx[k], -2) : () => {}; p.onNext = k ? nudge(sliceAx[k], 2) : () => {};
+      p.hasLine = !!(k && s.measure && s.mLine && s.mLine.k === k); p.ml = p.hasLine ? s.mLine : { x1: 0, y1: 0, x2: 0, y2: 0 };
+      if (k) { const orig = p.onDown; p.onDown = e => { if (!this.state.measure) return orig(e); const r = e.currentTarget.getBoundingClientRect(); const pt = ev => [cl((ev.clientX - r.left) / r.width * 100).toFixed(1), cl((ev.clientY - r.top) / r.height * 100).toFixed(1)]; const [x1, y1] = pt(e); this.setState({ mLine: { k, x1, y1, x2: x1, y2: y1 } }); const mv = ev => { const [x2, y2] = pt(ev); this.setState(st => ({ mLine: { ...st.mLine, x2, y2 } })); }; const upf = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', upf); }; window.addEventListener('mousemove', mv); window.addEventListener('mouseup', upf); e.preventDefault(); }; }
+    });
+    // 3D overrides
+    const V = s.vis3, dente = s.view3 === 'dente';
+    let src1 = 'assets/3d/02_segmentacao_frontal.jpg', src2 = 'assets/3d/03_segmentacao_rotacionada.jpg', clip = 'none', empty3 = false;
+    if (!dente) {
+      if (!V.maxila && !V.mandibula) { if (V.dentes) { src1 = src2 = 'assets/3d/01_segmentacao_completa.jpg'; clip = 'linear-gradient(to bottom,transparent 10%,#000 18%,#000 52%,transparent 60%)'; } else if (V.canal) { src1 = src2 = 'assets/3d/01_segmentacao_completa.jpg'; clip = 'linear-gradient(to bottom,transparent 44%,#000 54%)'; } else empty3 = true; }
+      else if (!V.maxila) { src1 = src2 = 'assets/3d/01_segmentacao_completa.jpg'; }
+      else if (!V.mandibula) { clip = 'linear-gradient(to bottom,#000 44%,transparent 54%)'; }
+    } else { if (!V.maxila && !V.dentes) empty3 = true; src1 = src2 = V.maxila ? 'assets/3d/02_segmentacao_frontal.jpg' : 'assets/3d/01_segmentacao_completa.jpg'; clip = 'radial-gradient(circle at 59% 37%,#000 8%,transparent 15%)'; }
+    const edge = 'radial-gradient(ellipse at 50% 50%,#000 58%,transparent 72%)';
+    clip = clip === 'none' ? edge : edge + ',' + clip;
+    const zz = (dente ? 2.1 : 1.14) * s.zoom3, org = dente ? '59% 37%' : '50% 50%';
+    const tf3 = 'perspective(1600px) rotateY(' + (s.ang * 0.55).toFixed(1) + 'deg) scale(' + zz.toFixed(2) + ')';
+    const t3 = src1 === src2 ? 0 : Math.min(1, Math.abs(s.ang) / 30);
+    const frames3dN = empty3 ? [] : [{ src: src1, op: (1 - t3 * 0.85).toFixed(2), tf: tf3, clip, origin: org }, { src: src2, op: (t3 * 0.85).toFixed(2), tf: tf3, clip, origin: org }];
+    const s3 = [['maxila', 'Maxila', '#c9c56a'], ['mandibula', 'Mandíbula', '#a78fd6'], ['dentes', 'Dentes', '#e3a66d'], ['canal', 'Canal mandibular', '#e5484d'], ['seio', 'Seio maxilar', '#63bcd4']];
+    const struct3 = s3.filter(d => dente ? ['maxila', 'dentes', 'seio'].includes(d[0]) : d[0] !== 'seio').map(([k, name, color]) => ({ name, color, op: V[k] ? 1 : 0.4, eye: V[k] ? ic.olho : ic.olhoOff, eyeColor: V[k] ? '#c6cacf' : '#6d737a', onClick: () => set({ vis3: { ...V, [k]: !V[k] } }) }));
+    const view3Chips = [['full', 'Volume completo'], ['dente', 'Região 26']].map(([k, label]) => ({ label, onClick: () => set(k === 'full' ? { view3: 'full', vis3: { maxila: true, mandibula: true, dentes: true, canal: true, seio: true } } : { view3: 'dente', vis3: { maxila: true, mandibula: true, dentes: true, canal: true, seio: true } }), style: segN(s.view3 === k) }));
+    const z3 = d => () => set({ zoom3: Math.max(0.6, Math.min(2.5, +(s.zoom3 + d).toFixed(2))) });
+    const t3dTools = this.tb([{ i: 'rotacionar', t: 'Arraste no modelo para girar', on: true, f: () => {} }, { i: 'zoomIn', t: 'Aproximar', f: z3(0.2) }, { i: 'zoomOut', t: 'Afastar', f: z3(-0.2) }, '|', { i: 'reset', t: 'Restaurar vista', f: () => set({ ang: 0, zoom3: 1, view3: 'full', vis3: { maxila: true, mandibula: true, dentes: true, canal: true, seio: true } }) }]);
+    const fDefs = [
+      ['Restauração oclusal', 5, 'Material radiopaco na face oclusal da coroa.', { l: 20, t: 44, w: 60, h: 11 }],
+      ['Seio maxilar', 6, 'Assoalho do seio maxilar próximo às raízes.', { l: 22, t: 3, w: 58, h: 26 }],
+      ['Região periapical', 4, 'Conferir a região dos ápices nos cortes vizinhos.', { l: 28, t: 27, w: 44, h: 17 }]
+    ];
+    const fi = s.finding ?? 0;
+    const findings = fDefs.map(([label, k, desc, box], i) => ({ label, desc, box, n: k + 1, src: cutSrc(k), sel: i === fi, bg: i === fi ? 'rgba(255,255,255,0.04)' : 'transparent', dot: i === fi ? '#f2b84b' : '#5b6168',
+      onClick: () => set({ finding: i, cut: k, measure: false }), open: e => { e.stopPropagation(); set({ finding: i, cut: k, measure: false, anaView: 'evidencia' }); } }));
+    const cf = fDefs.find(d => d[1] === s.cut);
     return {
+      findings, findingsCount: String(fDefs.length), cutFinding: !!cf && !s.measure, cutFindingLabel: cf ? cf[0] : '', cutBox: cf ? { ...cf[3], lt: cf[3].t + cf[3].h } : { l: 0, t: 0, w: 0, h: 0, lt: 0 },
       series, thumbs5, teethUp: up.map(tooth), teethLo: lo.map(tooth), tooth: '26',
       prevCut: () => setCut(s.cut - 1), nextCut: () => setCut(s.cut + 1),
       mprPanes, mprCols: single ? '1fr' : '1fr 1fr', mprRows: single ? '1fr' : '1fr 1fr', posRows,
       centerPos: () => set({ pos: { x: 50, y: 50, z: 50 }, vp: {} }),
       toggleSync: () => set({ sync: !s.sync, vp: {} }),
-      expStatus: s.mode === 'mpr' ? 'x ' + Math.round(P.x) + ' · y ' + Math.round(P.y) + ' · z ' + Math.round(P.z) + (s.sync ? '' : ' · planos independentes') : s.mode === '3d' ? 'Rotação ' + s.ang + '° · zoom 100%' : b.expStatus,
-      frames3d, on3dDown, viewChips, miniMpr, stop: e => e.stopPropagation(),
+      expStatus: s.mode === 'mpr' ? 'Zoom ' + Math.round(s.zoom * 100) + '%' : s.mode === '3d' ? 'Rotação ' + s.ang + '° · zoom ' + Math.round(s.zoom3 * 100) + '%' : b.expStatus,
+      tbExp: s.mode === 'mpr' ? mprTools : s.mode === '3d' ? t3dTools : s.mode === 'para' ? this.tb([{ i: 'medir', t: 'Medir', on: s.measure, f: () => set({ measure: !s.measure }) }, '|', { i: 'reset', t: 'Restaurar', f: () => set({ bri: 50, con: 50, measure: false }) }]) : b.tbExp, mprPop: s.mode === 'mpr' && s.imgPop,
+      panelDisp: s.mode === 'para' || s.mode === 'plan' ? 'block' : 'none', viewRad: s.mode === 'para' || s.mode === 'plan' ? '8px 0 0 8px' : '8px',
+      v3View: dente ? 'dente' : 'full', v3Vis: Object.keys(V).filter(k => V[k]).join(','), v3Yaw: String(s.ang), v3Zoom: String(s.zoom3),
+      pFocus: (s.pComp === '3dev' ? ['dentes', 'maxila'] : ['canal', 'dentes', 'mandibula', 'maxila']).find(k => s.pHi[k]) || '', pInter: s.pTool === 'selecionar' ? '1' : '0',
+      struct3, view3Chips, showStructs: true, empty3: dente ? !(V.maxila || V.dentes || V.seio) : !(V.maxila || V.mandibula || V.dentes || V.canal), on3dDown, viewChips, miniMpr, stop: e => e.stopPropagation(),
       planesOpen: s.planesOpen, togglePlanes: () => set({ planesOpen: !s.planesOpen }), planesLabel: s.planesOpen ? 'Ocultar planos' : 'Mostrar planos',
       pl, addImplant: () => set({ implant: true }),
-      ev: { x: Math.round(s.pos.x), y: Math.round(s.pos.y), z: Math.round(s.pos.z) }, hiChips, pImg3d, stageBg: s.pComp === 'pano' ? '#05070a' : '#0b1526'
+      ev: { x: Math.round(s.pos.x), y: Math.round(s.pos.y), z: Math.round(s.pos.z) }, hiChips, pImg3d, stageBg: s.pComp === 'pano' ? '#0d0e0f' : 'radial-gradient(ellipse at 50% 48%,#0c1522 0%,#0f1215 80%)', showHi: s.pComp !== 'pano',
+      expHasHint: s.mode === 'mpr' || s.mode === '3d', tipExp: tip(s.mode === '3d' ? 'Arraste no modelo para girar.' : s.measure ? 'Arraste sobre um plano para medir.' : 'Arraste em um plano para mover as linhas de referência.'),
+      tipDemo: tip('Dados simulados para demonstração do protótipo.'), tipPos: tip('A linha azul indica a posição do corte ativo na panorâmica e no arco.'),
+      tipOff: () => this.setState({ tip: null }), tipOn: !!s.tip, tip: s.tip || { x: 0, y: 0, text: '' }
     };
   }
 
