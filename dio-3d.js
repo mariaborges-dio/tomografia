@@ -225,7 +225,7 @@
         const m = new T.Mesh(g, this.mats.mandibula); m.position.x = side * 29.5; m.rotation.y = side * 0.1; m.renderOrder = 3; M.add(m); this.parts.mandibula.push(m);
         const cv = new T.CatmullRomCurve3([[27.5, -3, -37], [26.5, -13, -31], [25, -21, -20], [23, -23.5, -8], [20.5, -21.5, 3], [18.5, -18, 12]].map(([x, y, z]) => new T.Vector3(side * x, y, z)));
         const c = new T.Mesh(new T.TubeGeometry(cv, 64, 1.25, 14), this.mats.canal); M.add(c); this.parts.canal.push(c);
-        const si = new T.Mesh(new T.SphereGeometry(1, 40, 28), this.mats.seio); si.scale.set(7, 6.5, 10.5); si.position.set(side * 18, 27.5, -6); si.renderOrder = 2; M.add(si); this.parts.seio.push(si);
+        
       });
       // teeth
       this.teeth = {};

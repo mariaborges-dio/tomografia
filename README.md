@@ -1,20 +1,31 @@
-# Tomografia CBCT — MVP
+# DIO - MVP Tomografia CBCT
 
-Protótipo estático do MVP de Tomografia CBCT da DIO.
+Protótipo navegável estático para demonstração do fluxo de Tomografia CBCT.
 
-## Rodar localmente
+## Executar localmente
 
-Abra `index.html` em um servidor HTTP local (por exemplo, Live Server) ou faça deploy direto no Vercel.
+Como o protótipo usa módulos locais, abra a pasta com um servidor HTTP simples em vez de abrir o HTML diretamente pelo `file://`.
 
-## Vercel
+Exemplo:
 
-- Framework Preset: Other
-- Build Command: vazio
-- Output Directory: `.`
+```bash
+python3 -m http.server 8000
+```
+
+Depois acesse `http://localhost:8000`.
+
+## Deploy no Vercel
+
+O projeto é estático. Importe o repositório no Vercel e mantenha as configurações padrão, sem build command.
 
 ## Estrutura
 
-- `index.html` — protótipo final
-- `support.js` — runtime usado pelo protótipo
-- `dio-3d.js` — componente da visualização 3D
-- `assets/` — imagens usadas pelo MVP
+- `index.html` - aplicação principal
+- `support.js` - runtime de suporte do protótipo
+- `dio-3d.js` - visualização 3D
+- `assets/clean` - panorâmica, arco, MPR e cortes preparados
+- `assets/mpr` - imagens auxiliares do MPR/planejamento
+- `assets/alinhamento` - imagens usadas nos estados de orientação
+- `assets/3d` - assets auxiliares da visualização 3D
+
+> Conteúdo clínico e achados exibidos no MVP são demonstrativos.
